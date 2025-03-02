@@ -1,21 +1,18 @@
 package com.project.command.repository;
 
-import com.project.command.model.RecommendationDTO;
-import com.project.command.model.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-    public class RecommendationsRepository {
+    public class RecmRepository {
         private final JdbcTemplate jdbcTemplate;
 
-        public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
+        public RecmRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
             this.jdbcTemplate = jdbcTemplate;
         }
 
@@ -27,11 +24,7 @@ import java.util.UUID;
             return result != null ? result : 0;
         }
 
-        public List<User> getFewUsers(){
-            return jdbcTemplate.queryForList(
-                    "SELECT * FROM users LIMIT 15",
-                    User.class);
-        }
+
 
     public Optional<String> findUserNameById(String user_id) {
         String userName = jdbcTemplate.queryForObject(
@@ -44,7 +37,4 @@ import java.util.UUID;
         }
     }
 
-    public List<RecommendationDTO> findById(String userId) {
-        return Collections.emptyList();
-    }
 }

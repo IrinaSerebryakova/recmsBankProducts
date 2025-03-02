@@ -2,12 +2,12 @@ package com.project.command.model;
 
 import java.util.Objects;
 
-public class RecommendationDTO {
+public class RecmDTO {
     private String productName;
     private String productId;
     private String productText;
 
-    public RecommendationDTO(String productName, String productId, String productText) {
+    public RecmDTO(String productName, String productId, String productText) {
         this.productName = productName;
         this.productId = productId;
         this.productText = productText;
@@ -48,7 +48,7 @@ public class RecommendationDTO {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RecommendationDTO that = (RecommendationDTO) o;
+        RecmDTO that = (RecmDTO) o;
         return Objects.equals(productName, that.productName) && Objects.equals(productId, that.productId) && Objects.equals(productText, that.productText);
     }
 

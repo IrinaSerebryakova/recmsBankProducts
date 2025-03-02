@@ -1,6 +1,10 @@
 package com.project.command.repository;
 
-public class RecommendationsConstants {
+import com.project.command.model.RecmDTO;
+
+import java.util.List;
+
+public class RecmConstants {
 
     public final static String PRODUCT_NAME_INVEST = "Invest 500";
     public final static String PRODUCT_ID_INVEST = "147f6a0f-3b91-413b-ab99-87f081d60d5a";
@@ -38,5 +42,11 @@ public class RecommendationsConstants {
             Широкий выбор кредитных продуктов. Мы предлагаем кредиты на различные цели: покупку недвижимости, \
             автомобиля, образование, лечение и многое другое.\
             Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!""";
+
+    public final static RecmDTO INVEST = new RecmDTO(PRODUCT_NAME_INVEST, PRODUCT_ID_INVEST, PRODUCT_TEXT_INVEST);
+    public final static RecmDTO SAVING = new RecmDTO(PRODUCT_NAME_SAVING, PRODUCT_ID_SAVING, PRODUCT_TEXT_SAVING);
+    public final static RecmDTO CREDIT = new RecmDTO(PRODUCT_NAME_CREDIT, PRODUCT_ID_CREDIT, PRODUCT_TEXT_CREDIT);
+    public final static List<RecmDTO> recommendations = List.of(INVEST, SAVING, CREDIT);
+
 
 }
