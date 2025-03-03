@@ -90,5 +90,6 @@ public class RecomRuleSetImplToCredit implements RecomRuleSet {
             return false;
         }
     }
+
 }
 

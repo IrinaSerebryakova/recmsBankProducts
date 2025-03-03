@@ -26,5 +26,6 @@ public class RecomServiceImpl implements RecomService {
                 .map(Optional::get)
                 .collect(Collectors.toList());
     }
+
 }
 

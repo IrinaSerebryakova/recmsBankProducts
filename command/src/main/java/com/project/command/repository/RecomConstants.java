@@ -48,5 +48,4 @@ public class RecomConstants {
     public final static RecomDTO CREDIT = new RecomDTO(PRODUCT_NAME_CREDIT, PRODUCT_ID_CREDIT, PRODUCT_TEXT_CREDIT);
     public final static List<RecomDTO> recommendations = List.of(INVEST, SAVING, CREDIT);
 
-
 }

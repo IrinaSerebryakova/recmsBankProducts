@@ -20,4 +20,5 @@ public class RecomController {
     public List<RecomDTO> getRecommendationByUserId(@PathVariable String user_id) {
         return recomServiceImpl.getRecommendations(user_id);
     }
+
 }
