@@ -21,10 +21,10 @@ public class RecomRuleSetImplToSave implements RecomRuleSet {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<RecomDTO> evaluateRules(UUID user_id) {
+    public Optional<RecomDTO> evaluateRules(UUID userId) {
         logger.info("Method \"evaluateRules\" of {} is working", RecomRuleSetImplToSave.class);
         try {
-            boolean evaluate = atLeastOneProductDebit(user_id) && sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(user_id) && addDebitMoreThanSpendDebit(user_id);
+            boolean evaluate = atLeastOneProductDebit(userId) && sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(userId) && addDebitMoreThanSpendDebit(userId);
             return evaluate ? Optional.of(SAVING) : Optional.empty();
         } catch (NullPointerException e) {
             logger.error("При проверке id на соответствие набору правил выброшено NullPointerException");

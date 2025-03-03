@@ -15,15 +15,15 @@ import java.util.UUID;
             this.jdbcTemplate = jdbcTemplate;
         }
 
-        public int getRandomTransactionAmount(UUID user){
+        public int getRandomTransactionAmount(UUID userId){
             Integer result = jdbcTemplate.queryForObject(
                     "SELECT amount FROM transactions t WHERE t.user_id = ? LIMIT 1",
                     Integer.class,
-                    user);
+                    userId);
             return result != null ? result : 0;
         }
 
-    public Optional<String> findUserNameById(String user_id) {
+    public Optional<String> findUserNameById(UUID userId) {
         String userName = jdbcTemplate.queryForObject(
                 "SELECT username FROM users t WHERE t.user_id = user_id",
                 String.class);
