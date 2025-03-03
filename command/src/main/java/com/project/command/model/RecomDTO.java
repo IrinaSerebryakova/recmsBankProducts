@@ -2,14 +2,14 @@ package com.project.command.model;
 
 import java.util.Objects;
 
-public class RecmDTO {
-    private String productName;
+public class RecomDTO {
     private String productId;
+    private String productName;
     private String productText;
 
-    public RecmDTO(String productName, String productId, String productText) {
-        this.productName = productName;
+    public RecomDTO(String productName, String productId, String productText) {
         this.productId = productId;
+        this.productName = productName;
         this.productText = productText;
     }
 
@@ -39,8 +39,8 @@ public class RecmDTO {
     @Override
     public String toString() {
         return "recommendations: [\n" + "{\n" +
-                "\"name\": " + productName + "," +
                 "\"id\": " + productId + "," +
+                "\"name\": " + productName + "," +
                 "\"text\": " + productText +
                 "}\n" + "]\n";
     }
@@ -48,7 +48,7 @@ public class RecmDTO {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RecmDTO that = (RecmDTO) o;
+        RecomDTO that = (RecomDTO) o;
         return Objects.equals(productName, that.productName) && Objects.equals(productId, that.productId) && Objects.equals(productText, that.productText);
     }
 

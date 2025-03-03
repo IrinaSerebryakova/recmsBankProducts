@@ -4,15 +4,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-    public class RecmRepository {
+    public class RecomRepository {
         private final JdbcTemplate jdbcTemplate;
 
-        public RecmRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
+        public RecomRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
             this.jdbcTemplate = jdbcTemplate;
         }
 
@@ -24,8 +23,6 @@ import java.util.UUID;
             return result != null ? result : 0;
         }
 
-
-
     public Optional<String> findUserNameById(String user_id) {
         String userName = jdbcTemplate.queryForObject(
                 "SELECT username FROM users t WHERE t.user_id = user_id",
@@ -36,5 +33,4 @@ import java.util.UUID;
             return Optional.empty();
         }
     }
-
 }

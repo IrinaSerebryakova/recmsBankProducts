@@ -1,27 +1,27 @@
 package com.project.command.component;
 
-import com.project.command.model.RecmDTO;
+import com.project.command.model.RecomDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static com.project.command.repository.RecmConstants.SAVING;
+import static com.project.command.repository.RecomConstants.SAVING;
 
 @Component
-public class RecmRuleSetImplToSave implements RecmRuleSet {
-    private final static Logger logger = LoggerFactory.getLogger(RecmRuleSetImplToSave.class);
+public class RecomRuleSetImplToSave implements RecomRuleSet {
+    private final static Logger logger = LoggerFactory.getLogger(RecomRuleSetImplToSave.class);
     private static JdbcTemplate jdbcTemplate;
 
-    public RecmRuleSetImplToSave(JdbcTemplate jdbcTemplate) {
+    public RecomRuleSetImplToSave(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<RecmDTO> evaluateRules(String user_id) {
-        logger.info("Method \"evaluateRules\" of {} is working", RecmRuleSetImplToSave.class);
+    public Optional<RecomDTO> evaluateRules(String user_id) {
+        logger.info("Method \"evaluateRules\" of {} is working", RecomRuleSetImplToSave.class);
         try {
             boolean evaluate = atLeastOneProductDebit(user_id) && sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(user_id) && addDebitMoreThanSpendDebit(user_id);
             return evaluate ? Optional.of(SAVING) : Optional.empty();
@@ -35,7 +35,7 @@ public class RecmRuleSetImplToSave implements RecmRuleSet {
      * Пользователь использует как минимум один продукт с типом DEBIT.
      */
     public static boolean atLeastOneProductDebit(String userId){
-        logger.info("Rule \"atLeastOneProductDebit\" of {} is checking", RecmRuleSetImplToSave.class);
+        logger.info("Rule \"atLeastOneProductDebit\" of {} is checking", RecomRuleSetImplToSave.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM transactions WHERE user_id = ? AND type = 'DEBIT') THEN 0 ELSE 1 END",
@@ -52,7 +52,7 @@ public class RecmRuleSetImplToSave implements RecmRuleSet {
      * Сумма пополнений по всем продуктам типа DEBIT больше или равна 50 000 ₽ ИЛИ Сумма пополнений по всем продуктам типа SAVING больше или равна 50 000 ₽.
      */
     public static boolean sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(String userId) {
-        logger.info("Rule \"sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub\" of {} is checking", RecmRuleSetImplToSave.class);
+        logger.info("Rule \"sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub\" of {} is checking", RecomRuleSetImplToSave.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT CASE WHEN SUM(CASE WHEN p.type = 'DEBIT' THEN t.amount ELSE 0 END) >=" +
@@ -74,7 +74,7 @@ public class RecmRuleSetImplToSave implements RecmRuleSet {
      * Сумма пополнений по всем продуктам типа DEBIT больше, чем сумма трат по всем продуктам типа DEBIT.
      */
     public static boolean addDebitMoreThanSpendDebit(String userId){
-        logger.info("Rule \"addDebitMoreThanSpendDebit\" of {} is checking", RecmRuleSetImplToSave.class);
+        logger.info("Rule \"addDebitMoreThanSpendDebit\" of {} is checking", RecomRuleSetImplToSave.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT CASE WHEN SUM(CASE WHEN t.type = 'DEPOSIT' THEN t.amount ELSE 0 END) > " +
