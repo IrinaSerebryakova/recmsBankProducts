@@ -1,27 +1,28 @@
 package com.project.command.component;
 
-import com.project.command.model.RecmDTO;
+import com.project.command.model.RecomDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static com.project.command.repository.RecmConstants.INVEST;
+import static com.project.command.repository.RecomConstants.INVEST;
 
 @Component
-public class RecmRuleSetImplToInvest implements RecmRuleSet {
-    private final static Logger logger = LoggerFactory.getLogger(RecmRuleSetImplToInvest.class);
+public class RecomRuleSetImplToInvest implements RecomRuleSet {
+    private final static Logger logger = LoggerFactory.getLogger(RecomRuleSetImplToInvest.class);
     private static JdbcTemplate jdbcTemplate;
 
-    public RecmRuleSetImplToInvest(JdbcTemplate jdbcTemplate) {
+    @Autowired
+    public RecomRuleSetImplToInvest(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<RecmDTO> evaluateRules(String user_id) {
-        logger.info("Method \"evaluateRules\" of {} is working", RecmRuleSetImplToInvest.class);
+    public Optional<RecomDTO> evaluateRules(String user_id) {
+        logger.info("Method \"evaluateRules\" of {} is working", RecomRuleSetImplToInvest.class);
         try{
             boolean evaluate = atLeastOneProductDebit(user_id) && noOneProductInvest(user_id) && sumOfSavingMoreThanOneThousandRub(user_id);
             return evaluate ? Optional.of(INVEST) : Optional.empty();
@@ -35,7 +36,7 @@ public class RecmRuleSetImplToInvest implements RecmRuleSet {
      * Пользователь использует как минимум один продукт с типом DEBIT.
      */
     public static boolean atLeastOneProductDebit(String userId) {
-        logger.info("Rule \"atLeastOneProductDebit\" of {} is checking", RecmRuleSetImplToInvest.class);
+        logger.info("Rule \"atLeastOneProductDebit\" of {} is checking", RecomRuleSetImplToInvest.class);
     try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT CASE WHEN NOT EXISTS (SELECT 1 FROM transactions WHERE user_id = ? AND type = 'DEBIT') THEN 0 ELSE 1 END",
@@ -51,7 +52,7 @@ public class RecmRuleSetImplToInvest implements RecmRuleSet {
      * Пользователь не использует продукты с типом INVEST.
      */
     public static boolean noOneProductInvest(String userId) {
-        logger.info("Rule \"noOneProductInvest\" of {} is checking", RecmRuleSetImplToInvest.class);
+        logger.info("Rule \"noOneProductInvest\" of {} is checking", RecomRuleSetImplToInvest.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT COUNT(*) = 0 FROM transactions WHERE user_id = :userId AND type = 'INVEST')",
@@ -68,7 +69,7 @@ public class RecmRuleSetImplToInvest implements RecmRuleSet {
      * Сумма пополнений продуктов с типом SAVING больше 1000 ₽.
      */
     public static boolean sumOfSavingMoreThanOneThousandRub(String userId) {
-        logger.info("Rule \"sumOfSavingMoreThanOneThousandRub\" of {} is checking", RecmRuleSetImplToInvest.class);
+        logger.info("Rule \"sumOfSavingMoreThanOneThousandRub\" of {} is checking", RecomRuleSetImplToInvest.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT SUM(amount) FROM transactions WHERE user_id = :userId AND type = 'SAVING'",
