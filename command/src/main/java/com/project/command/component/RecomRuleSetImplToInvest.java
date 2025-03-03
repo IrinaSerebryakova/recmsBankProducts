@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.project.command.repository.RecomConstants.INVEST;
 
@@ -21,7 +22,7 @@ public class RecomRuleSetImplToInvest implements RecomRuleSet {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<RecomDTO> evaluateRules(String user_id) {
+    public Optional<RecomDTO> evaluateRules(UUID user_id) {
         logger.info("Method \"evaluateRules\" of {} is working", RecomRuleSetImplToInvest.class);
         try{
             boolean evaluate = atLeastOneProductDebit(user_id) && noOneProductInvest(user_id) && sumOfSavingMoreThanOneThousandRub(user_id);
@@ -35,7 +36,7 @@ public class RecomRuleSetImplToInvest implements RecomRuleSet {
     /**
      * Пользователь использует как минимум один продукт с типом DEBIT.
      */
-    public static boolean atLeastOneProductDebit(String userId) {
+    public static boolean atLeastOneProductDebit(UUID userId) {
         logger.info("Rule \"atLeastOneProductDebit\" of {} is checking", RecomRuleSetImplToInvest.class);
     try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -51,7 +52,7 @@ public class RecomRuleSetImplToInvest implements RecomRuleSet {
     /**
      * Пользователь не использует продукты с типом INVEST.
      */
-    public static boolean noOneProductInvest(String userId) {
+    public static boolean noOneProductInvest(UUID userId) {
         logger.info("Rule \"noOneProductInvest\" of {} is checking", RecomRuleSetImplToInvest.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -68,7 +69,7 @@ public class RecomRuleSetImplToInvest implements RecomRuleSet {
     /**
      * Сумма пополнений продуктов с типом SAVING больше 1000 ₽.
      */
-    public static boolean sumOfSavingMoreThanOneThousandRub(String userId) {
+    public static boolean sumOfSavingMoreThanOneThousandRub(UUID userId) {
         logger.info("Rule \"sumOfSavingMoreThanOneThousandRub\" of {} is checking", RecomRuleSetImplToInvest.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -81,6 +82,7 @@ public class RecomRuleSetImplToInvest implements RecomRuleSet {
             return false;
         }
     }
+
 }
 
 

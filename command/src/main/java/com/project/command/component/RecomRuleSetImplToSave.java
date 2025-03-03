@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.project.command.repository.RecomConstants.SAVING;
 
@@ -20,7 +21,7 @@ public class RecomRuleSetImplToSave implements RecomRuleSet {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<RecomDTO> evaluateRules(String user_id) {
+    public Optional<RecomDTO> evaluateRules(UUID user_id) {
         logger.info("Method \"evaluateRules\" of {} is working", RecomRuleSetImplToSave.class);
         try {
             boolean evaluate = atLeastOneProductDebit(user_id) && sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(user_id) && addDebitMoreThanSpendDebit(user_id);
@@ -34,7 +35,7 @@ public class RecomRuleSetImplToSave implements RecomRuleSet {
     /**
      * Пользователь использует как минимум один продукт с типом DEBIT.
      */
-    public static boolean atLeastOneProductDebit(String userId){
+    public static boolean atLeastOneProductDebit(UUID userId){
         logger.info("Rule \"atLeastOneProductDebit\" of {} is checking", RecomRuleSetImplToSave.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -51,7 +52,7 @@ public class RecomRuleSetImplToSave implements RecomRuleSet {
     /**
      * Сумма пополнений по всем продуктам типа DEBIT больше или равна 50 000 ₽ ИЛИ Сумма пополнений по всем продуктам типа SAVING больше или равна 50 000 ₽.
      */
-    public static boolean sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(String userId) {
+    public static boolean sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(UUID userId) {
         logger.info("Rule \"sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub\" of {} is checking", RecomRuleSetImplToSave.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -73,7 +74,7 @@ public class RecomRuleSetImplToSave implements RecomRuleSet {
     /**
      * Сумма пополнений по всем продуктам типа DEBIT больше, чем сумма трат по всем продуктам типа DEBIT.
      */
-    public static boolean addDebitMoreThanSpendDebit(String userId){
+    public static boolean addDebitMoreThanSpendDebit(UUID userId){
         logger.info("Rule \"addDebitMoreThanSpendDebit\" of {} is checking", RecomRuleSetImplToSave.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -89,6 +90,7 @@ public class RecomRuleSetImplToSave implements RecomRuleSet {
             return false;
         }
     }
+
 }
 
 

@@ -25,5 +25,4 @@ public class RecomsDataSourceConfiguration {
             @Qualifier("recommendationsDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
-
 }

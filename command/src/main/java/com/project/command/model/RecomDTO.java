@@ -1,13 +1,14 @@
 package com.project.command.model;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class RecomDTO {
-    private String productId;
+    private UUID productId;
     private String productName;
     private String productText;
 
-    public RecomDTO(String productName, String productId, String productText) {
+    public RecomDTO(String productName, UUID productId, String productText) {
         this.productId = productId;
         this.productName = productName;
         this.productText = productText;
@@ -21,11 +22,11 @@ public class RecomDTO {
         this.productName = productName;
     }
 
-    public String getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 
@@ -36,6 +37,7 @@ public class RecomDTO {
     public void setProductText(String productText) {
         this.productText = productText;
     }
+
     @Override
     public String toString() {
         return "recommendations: [\n" + "{\n" +
@@ -56,5 +58,4 @@ public class RecomDTO {
     public int hashCode() {
         return Objects.hash(productName, productId, productText);
     }
-
 }
