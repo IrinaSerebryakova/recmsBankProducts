@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class RecomController {
@@ -17,8 +18,7 @@ public class RecomController {
     }
 
     @GetMapping("/recommendation/{user_id}")
-    public List<RecomDTO> getRecommendationByUserId(@PathVariable String user_id) {
+    public List<RecomDTO> getRecommendationByUserId(@PathVariable UUID user_id) {
         return recomServiceImpl.getRecommendations(user_id);
     }
-
 }

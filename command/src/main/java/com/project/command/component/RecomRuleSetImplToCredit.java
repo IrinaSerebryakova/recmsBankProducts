@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.project.command.repository.RecomConstants.CREDIT;
 
@@ -21,7 +22,7 @@ public class RecomRuleSetImplToCredit implements RecomRuleSet {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<RecomDTO> evaluateRules(String user_id) {
+    public Optional<RecomDTO> evaluateRules(UUID user_id) {
         logger.info("Method \"evaluateRules\" of {} is working", RecomRuleSetImplToCredit.class);
         try {
             boolean evaluate = addDebitMoreThanSpendDebit(user_id) && noOneProductCredit(user_id) && sumSpendDebitMoreOneHundredThousandsRub(user_id);
@@ -35,7 +36,7 @@ public class RecomRuleSetImplToCredit implements RecomRuleSet {
     /**
      * Сумма трат по всем продуктам типа DEBIT больше, чем 100 000 ₽.
      */
-    public static boolean sumSpendDebitMoreOneHundredThousandsRub(String userId) {
+    public static boolean sumSpendDebitMoreOneHundredThousandsRub(UUID userId) {
         logger.info("Rule \"sumSpendDebitMoreOneHundredThousandsRub\" of {} is checking", RecomRuleSetImplToCredit.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -57,7 +58,7 @@ public class RecomRuleSetImplToCredit implements RecomRuleSet {
     /**
      * Сумма пополнений по всем продуктам типа DEBIT больше, чем сумма трат по всем продуктам типа DEBIT.
      */
-    public static boolean addDebitMoreThanSpendDebit(String userId) {
+    public static boolean addDebitMoreThanSpendDebit(UUID userId) {
         logger.info("Rule \"addDebitMoreThanSpendDebit\" of {} is checking", RecomRuleSetImplToCredit.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(
@@ -77,7 +78,7 @@ public class RecomRuleSetImplToCredit implements RecomRuleSet {
     /**
      * Пользователь не использует продукты с типом CREDIT.
      */
-    public static boolean noOneProductCredit(String userId) {
+    public static boolean noOneProductCredit(UUID userId) {
         logger.info("Rule \"noOneProductCredit\" of {} is checking", RecomRuleSetImplToCredit.class);
         try {
             Boolean result = jdbcTemplate.queryForObject(

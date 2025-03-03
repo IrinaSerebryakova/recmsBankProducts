@@ -3,11 +3,12 @@ package com.project.command.repository;
 import com.project.command.model.RecomDTO;
 
 import java.util.List;
+import java.util.UUID;
 
 public class RecomConstants {
 
     public final static String PRODUCT_NAME_INVEST = "Invest 500";
-    public final static String PRODUCT_ID_INVEST = "147f6a0f-3b91-413b-ab99-87f081d60d5a";
+    public final static UUID PRODUCT_ID_INVEST = UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a");
     public final static String PRODUCT_TEXT_INVEST = """
             Откройте свой путь к успеху с индивидуальным инвестиционным счетом (ИИС) от нашего банка! \
             Воспользуйтесь налоговыми льготами и начните инвестировать с умом. Пополните счет до конца \
@@ -16,7 +17,7 @@ public class RecomConstants {
             тенденциями. Откройте ИИС сегодня и станьте ближе к финансовой независимости!""";
 
     public final static String PRODUCT_NAME_SAVING = "Top Saving";
-    public final static String PRODUCT_ID_SAVING = "59efc529-2fff-41af-baff-90ccd7402925";
+    public final static UUID PRODUCT_ID_SAVING = UUID.fromString("59efc529-2fff-41af-baff-90ccd7402925");
     public final static String PRODUCT_TEXT_SAVING = """
             Откройте свою собственную «Копилку» с нашим банком!
             «Копилка» — это уникальный банковский инструмент, который поможет вам легко и удобно накапливать \
@@ -31,7 +32,7 @@ public class RecomConstants {
             Начните использовать «Копилку» уже сегодня и станьте ближе к своим финансовым целям!""";
 
     public final static String PRODUCT_NAME_CREDIT = "Простой кредит";
-    public final static String PRODUCT_ID_CREDIT = "ab138afb-f3ba-4a93-b74f-0fcee86d447f";
+    public final static UUID PRODUCT_ID_CREDIT = UUID.fromString("ab138afb-f3ba-4a93-b74f-0fcee86d447f");
     public final static String PRODUCT_TEXT_CREDIT = """
             Откройте мир выгодных кредитов с нами! \
             Ищете способ быстро и без лишних хлопот получить нужную сумму? Тогда наш выгодный кредит — именно \
