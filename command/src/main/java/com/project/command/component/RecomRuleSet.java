@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public interface RecomRuleSet {
 
-  Optional<RecomDTO> evaluateRules(UUID user_id);
+  Optional<RecomDTO> evaluateRules(UUID userId);
 }
 

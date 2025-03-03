@@ -3,7 +3,6 @@ package com.project.command.services;
 
 import com.project.command.component.RecomRuleSet;
 import com.project.command.model.RecomDTO;
-import com.project.command.model.Rule;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -17,8 +17,8 @@ public class RecomController {
         this.recomServiceImpl = recomServiceImpl;
     }
 
-    @GetMapping("/recommendation/{user_id}")
-    public List<RecomDTO> getRecommendationByUserId(@PathVariable UUID user_id) {
-        return recomServiceImpl.getRecommendations(user_id);
+    @GetMapping("/recommendation/{userId}")
+    public List<RecomDTO> getRecommendationByUserId(@PathVariable UUID userId) {
+        return recomServiceImpl.getRecommendations(userId);
     }
 }
