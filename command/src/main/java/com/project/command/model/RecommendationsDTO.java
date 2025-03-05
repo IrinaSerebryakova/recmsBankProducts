@@ -3,12 +3,12 @@ package com.project.command.model;
 import java.util.Objects;
 import java.util.UUID;
 
-public class RecomDTO {
+public class RecommendationsDTO {
     private UUID productId;
     private String productName;
     private String productText;
 
-    public RecomDTO(String productName, UUID productId, String productText) {
+    public RecommendationsDTO(String productName, UUID productId, String productText) {
         this.productId = productId;
         this.productName = productName;
         this.productText = productText;
@@ -50,7 +50,7 @@ public class RecomDTO {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        RecomDTO that = (RecomDTO) o;
+        RecommendationsDTO that = (RecommendationsDTO) o;
         return Objects.equals(productName, that.productName) && Objects.equals(productId, that.productId) && Objects.equals(productText, that.productText);
     }
 

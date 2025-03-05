@@ -1,11 +1,11 @@
 package com.project.command.repository;
 
-import com.project.command.model.RecomDTO;
+import com.project.command.model.RecommendationsDTO;
 
 import java.util.List;
 import java.util.UUID;
 
-public class RecomConstants {
+public class RecommendationsConstants {
 
     public final static String PRODUCT_NAME_INVEST = "Invest 500";
     public final static UUID PRODUCT_ID_INVEST = UUID.fromString("147f6a0f-3b91-413b-ab99-87f081d60d5a");
@@ -44,9 +44,9 @@ public class RecomConstants {
             автомобиля, образование, лечение и многое другое.\
             Не упустите возможность воспользоваться выгодными условиями кредитования от нашей компании!""";
 
-    public final static RecomDTO INVEST = new RecomDTO(PRODUCT_NAME_INVEST, PRODUCT_ID_INVEST, PRODUCT_TEXT_INVEST);
-    public final static RecomDTO SAVING = new RecomDTO(PRODUCT_NAME_SAVING, PRODUCT_ID_SAVING, PRODUCT_TEXT_SAVING);
-    public final static RecomDTO CREDIT = new RecomDTO(PRODUCT_NAME_CREDIT, PRODUCT_ID_CREDIT, PRODUCT_TEXT_CREDIT);
-    public final static List<RecomDTO> recommendations = List.of(INVEST, SAVING, CREDIT);
+    public final static RecommendationsDTO INVEST = new RecommendationsDTO(PRODUCT_NAME_INVEST, PRODUCT_ID_INVEST, PRODUCT_TEXT_INVEST);
+    public final static RecommendationsDTO SAVING = new RecommendationsDTO(PRODUCT_NAME_SAVING, PRODUCT_ID_SAVING, PRODUCT_TEXT_SAVING);
+    public final static RecommendationsDTO CREDIT = new RecommendationsDTO(PRODUCT_NAME_CREDIT, PRODUCT_ID_CREDIT, PRODUCT_TEXT_CREDIT);
+    public final static List<RecommendationsDTO> recommendations = List.of(INVEST, SAVING, CREDIT);
 
 }
