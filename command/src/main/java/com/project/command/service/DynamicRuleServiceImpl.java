@@ -1,11 +1,12 @@
 package com.project.command.service;
 
-import com.project.command.repository.DynamicRuleRepository;
 import com.project.command.model.DynamicRule;
+import com.project.command.repository.DynamicRuleRepository;
 import com.project.command.service.interfaces.DynamicRuleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DynamicRuleServiceImpl implements DynamicRuleService {
@@ -14,16 +15,16 @@ public class DynamicRuleServiceImpl implements DynamicRuleService {
     public DynamicRuleServiceImpl(DynamicRuleRepository dynamicRuleRepository) {
         this.dynamicRuleRepository = dynamicRuleRepository;
     }
-
-    public List<DynamicRule> createNewDynamicRuleOfRecommendations() {
-        return dynamicRuleRepository.save(new DynamicRule());
+@Override
+    public DynamicRule createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule) {
+        return dynamicRuleRepository.save(dynamicRule);
     }
-
+    @Override
     public List<DynamicRule> getListOfDynamicRulesOfRecommendations(){
         return dynamicRuleRepository.findAll();
     }
-
-    public List<DynamicRule> deleteDynamicRuleOfRecommendations(Long productId) {
-        return dynamicRuleRepository.deleteById(productId);
+    @Override
+    public DynamicRule deleteDynamicRuleOfRecommendations(UUID dynamicRuleId) {
+        return dynamicRuleRepository.deleteById(dynamicRuleId);
     }
 }

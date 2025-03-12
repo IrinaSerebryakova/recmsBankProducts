@@ -1,4 +1,4 @@
-ackage com.project.command.repository;
+package com.project.command.repository;
 
 import java.util.List;
 

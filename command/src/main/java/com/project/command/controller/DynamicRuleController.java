@@ -17,8 +17,8 @@ public class DynamicRuleController {
     }
 
     @PostMapping("/rule")
-    public List<DynamicRule> createNewDynamicRuleOfRecommendations(){
-        return dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations();
+    public DynamicRule createNewDynamicRuleOfRecommendations(@PathVariable DynamicRule dynamicRule){
+        return dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations(dynamicRule);
     }
 
     @GetMapping("/rule")
@@ -27,8 +27,8 @@ public class DynamicRuleController {
     }
 
     @DeleteMapping("/rule/{productId}")
-    public ResponseEntity<List<DynamicRule>> deleteDynamicRuleOfRecommendations(@PathVariable UUID productId){
-        return dynamicRuleServiceImpl.deleteDynamicRuleOfRecommendations(productId);
+    public DynamicRule deleteDynamicRuleOfRecommendations(@PathVariable UUID dynamicRuleId){
+        return dynamicRuleServiceImpl.deleteDynamicRuleOfRecommendations(dynamicRuleId);
     }
 
 }

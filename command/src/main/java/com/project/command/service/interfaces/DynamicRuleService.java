@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DynamicRuleService {
-    List<DynamicRule> createNewDynamicRuleOfRecommendations();
+    DynamicRule createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule);
 
     List<DynamicRule> getListOfDynamicRulesOfRecommendations();
 
-    ResponseEntity<List<DynamicRule>> deleteDynamicRuleOfRecommendations(UUID productId);
+    DynamicRule deleteDynamicRuleOfRecommendations(UUID dynamicRuleId);
 }

@@ -1,6 +1,5 @@
 package com.project.command.repository;
 
-import com.project.command.component.CreditRecommendationsRuleSetImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +11,7 @@ import java.util.UUID;
 
 @Repository
     public class RecommendationsRepository {
-        private final JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     private final static Logger logger = LoggerFactory.getLogger(RecommendationsRepository.class);
 
         public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
@@ -57,28 +56,6 @@ import java.util.UUID;
         } catch (Exception e) {
             logger.error("Error in \"sumSpendDebitMoreOneHundredThousandsRub\" for userId: {}, message: {}",
                     userId, e.getMessage(), e);
-            return false;
-        }
-    }
-
-    /**
-     * Сумма пополнений по всем продуктам типа DEBIT больше, чем сумма трат по всем продуктам типа DEBIT.
-     */
-    public boolean addDebitMoreThanSpendDebit(UUID userId) {
-        try {
-            Boolean result = jdbcTemplate.queryForObject(
-                    "SELECT CASE WHEN SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = 'DEBIT') > " +
-                            "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = 'DEBIT') " +
-                            "THEN TRUE ELSE FALSE END " +
-                            "FROM transactions t " +
-                            "JOIN products p ON t.product_id = p.id " +
-                            "WHERE t.user_id = ?;",
-                    new Object[]{userId},
-                    Boolean.class);
-            logger.info("Result of method checking rule \"addDebitMoreThanSpendDebit\" is {}", result);
-            return result != null && result;
-        } catch (Exception e) {
-            logger.error("Error in \"addDebitMoreThanSpendDebit\" for userId: {}, message: {}", userId, e.getMessage(), e);
             return false;
         }
     }
@@ -168,27 +145,6 @@ import java.util.UUID;
     }
 
     /**
-     * Пользователь использует как минимум один продукт с типом DEBIT.
-     */
-    public boolean atLeastOneProductDebit(UUID userId){
-        try {
-            Boolean result = jdbcTemplate.queryForObject(
-                    "SELECT COUNT(*) > 0 " +
-                            "FROM transactions t " +
-                            "JOIN products p " +
-                            "ON t.product_id = p.id " +
-                            "WHERE t.user_id = ? AND p.type = 'DEBIT';",
-                    new Object[]{userId},
-                    Boolean.class);
-            logger.info("Result of method checking rule \"atLeastOneProductDebit\" is {}", result);
-            return result != null && result;
-        } catch (Exception e) {
-            logger.error("Error in \"atLeastOneProductDebit\" for userId: {}, message: {}", userId, e.getMessage(), e);
-            return false;
-        }
-    }
-
-    /**
      * Сумма пополнений по всем продуктам типа DEBIT больше или равна 50 000 ₽ ИЛИ Сумма пополнений по всем продуктам типа SAVING больше или равна 50 000 ₽.
      */
     public boolean sumAddDebitOrSumAddSavingGreaterThanOrEqualToFiftyThousandRub(UUID userId) {
@@ -218,7 +174,7 @@ import java.util.UUID;
     public boolean addDebitMoreThanSpendDebit(UUID userId){
         try {
             Boolean result = jdbcTemplate.queryForObject(
-                    "SELECT CASE WHEN SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = 'DEBIT') > " +
+                    "SELECT CASE WHEN SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = 'DEBIT'``) > " +
                             "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = 'DEBIT') " +
                             "THEN TRUE ELSE FALSE END " +
                             "FROM transactions t " +
