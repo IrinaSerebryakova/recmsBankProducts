@@ -35,6 +35,7 @@ public class InvestRecommendationsRuleSetImpl implements RecommendationsRuleSet 
         }
         return Optional.of(INVEST);
     }
+
 }
 
 

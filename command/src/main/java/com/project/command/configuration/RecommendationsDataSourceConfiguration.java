@@ -18,11 +18,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
 @EnableCaching
-@EnableJpaRepositories(basePackages = "com.project.command.repository", entityManagerFactoryRef = "entityManagerFactory")
+@EnableJpaRepositories("com.project.command.repository")
 public class RecommendationsDataSourceConfiguration {
 
     @Bean(name = "recommendationsDataSource")
@@ -35,29 +36,10 @@ public class RecommendationsDataSourceConfiguration {
     }
 
     @Primary
-    @Bean(name = "defaultDataSource")
-    public DataSource defaultdataSource(DataSourceProperties properties) {
+    @Bean(name = "dynamicRuleDataSource")
+    public DataSource dynamicRuleDataSource(DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().build();
     }
-
-    @Bean(name = "entityManagerFactory")
-        public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-                @Qualifier("jpaDataSource") DataSource dataSource, // Здесь указываем нужный DataSource
-                JpaProperties jpaProperties) {
-            LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-            em.setDataSource(dataSource);
-            em.setPackagesToScan("com.project.command.repository", "com.project.command.entity"); // Укажите пакеты с вашими @Entity классами
-            em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-            em.setJpaProperties(jpaProperties.getProperties());
-            return em;
-        }
-
-
-        @Bean(name = "jpaDataSource") // Создаем Bean для нужного DataSource
-        public DataSource jpaDataSource() {
-            return defaultDataSource(new DataSourceProperties());
-        }
-
 
     @Bean(name = "recommendationsJdbcTemplate")
     public JdbcTemplate recommendationsJdbcTemplate(
@@ -65,6 +47,11 @@ public class RecommendationsDataSourceConfiguration {
         return new JdbcTemplate(dataSource);
     }
 
+    @Bean(name = "dynamicRuleJdbcTemplate")
+    public JdbcTemplate dynamicRuleJdbcTemplate(
+            @Qualifier("dynamicRuleDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 
     @Bean
     public Caffeine caffeineConfig() {
@@ -77,4 +64,26 @@ public class RecommendationsDataSourceConfiguration {
         caffeineCacheManager.setCaffeine(caffeine);
         return caffeineCacheManager;
     }
+
+
+    @Bean(name = "entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            @Qualifier("dynamicRuleDataSource") DataSource dataSource,
+            JpaProperties jpaProperties) {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(dataSource);
+        em.setPackagesToScan("com.project.command.model");
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        Properties properties = new Properties();
+        properties.putAll(jpaProperties.getProperties()); // Преобразование Map в Properties
+        em.setJpaProperties(properties);
+        return em;
+    }
+
+
+    @Bean
+    public JpaProperties jpaProperties() {
+        return new JpaProperties();
+    }
+
 }

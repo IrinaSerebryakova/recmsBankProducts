@@ -15,6 +15,7 @@ import static com.project.command.repository.RecommendationsConstants.CREDIT;
 
 @Component
 public class CreditRecommendationsRuleSetImpl implements RecommendationsRuleSet {
+
     private final static Logger logger = LoggerFactory.getLogger(CreditRecommendationsRuleSetImpl.class);
     private final RecommendationsRepository recommendationsRepository;
 

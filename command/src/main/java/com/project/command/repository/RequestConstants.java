@@ -11,5 +11,4 @@ public class RequestConstants {
     public final static List<String> operationType = List.of(">","<","=",">=","<=");
     public static int positiveNumber;
 
-
 }

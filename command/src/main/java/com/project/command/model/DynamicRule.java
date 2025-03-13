@@ -11,7 +11,7 @@ public class DynamicRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    private UUID dynamicRuleId;
 
     private String query; // тип запроса
     private String arguments; // аргументы запроса
@@ -51,30 +51,30 @@ public class DynamicRule {
         this.negate = negate;
     }
 
-    public UUID getId() {
-        return id;
+    public UUID getDynamicRuleId() {
+        return dynamicRuleId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setDynamicRuleId(UUID id) {
+        this.dynamicRuleId = id;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DynamicRule that = (DynamicRule) o;
-        return negate == that.negate && Objects.equals(id, that.id) && Objects.equals(query, that.query) && Objects.equals(arguments, that.arguments);
+        return negate == that.negate && Objects.equals(dynamicRuleId, that.dynamicRuleId) && Objects.equals(query, that.query) && Objects.equals(arguments, that.arguments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, query, arguments, negate);
+        return Objects.hash(dynamicRuleId, query, arguments, negate);
     }
 
     @Override
     public String toString() {
         return "DynamicRule{" +
-                "id=" + id +
+                "id=" + dynamicRuleId +
                 ", query='" + query + '\'' +
                 ", arguments='" + arguments + '\'' +
                 ", negate=" + negate +

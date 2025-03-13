@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DynamicRuleService {
+
     DynamicRule createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule);
 
     List<DynamicRule> getListOfDynamicRulesOfRecommendations();

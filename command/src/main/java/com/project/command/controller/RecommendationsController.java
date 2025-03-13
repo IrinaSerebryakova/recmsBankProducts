@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @RestController
 public class RecommendationsController {
+
     private final RecommendationsService recommendationsServiceImpl;
 
     public RecommendationsController(RecommendationsService recommendationsServiceImpl) {

@@ -58,4 +58,5 @@ public class RecommendationsDTO {
     public int hashCode() {
         return Objects.hash(productName, productId, productText);
     }
+
 }

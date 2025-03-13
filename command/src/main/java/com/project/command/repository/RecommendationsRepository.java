@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
     public class RecommendationsRepository {
+
     private final JdbcTemplate jdbcTemplate;
     private final static Logger logger = LoggerFactory.getLogger(RecommendationsRepository.class);
 

@@ -7,5 +7,4 @@ import java.util.UUID;
 
 public interface RecommendationsService {
     List<RecommendationsDTO> getRecommendations(UUID userId);
-
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/rule")
 public class DynamicRuleController {
     private final DynamicRuleService dynamicRuleServiceImpl;
 
@@ -16,17 +17,17 @@ public class DynamicRuleController {
         this.dynamicRuleServiceImpl = dynamicRuleServiceImpl;
     }
 
-    @PostMapping("/rule")
+    @PostMapping
     public DynamicRule createNewDynamicRuleOfRecommendations(@PathVariable DynamicRule dynamicRule){
         return dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations(dynamicRule);
     }
 
-    @GetMapping("/rule")
+    @GetMapping
     public List<DynamicRule> getListOfDynamicRulesOfRecommendations(){
         return dynamicRuleServiceImpl.getListOfDynamicRulesOfRecommendations();
     }
 
-    @DeleteMapping("/rule/{productId}")
+    @DeleteMapping("/{dynamicRuleId}")
     public DynamicRule deleteDynamicRuleOfRecommendations(@PathVariable UUID dynamicRuleId){
         return dynamicRuleServiceImpl.deleteDynamicRuleOfRecommendations(dynamicRuleId);
     }

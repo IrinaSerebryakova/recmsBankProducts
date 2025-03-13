@@ -4,6 +4,7 @@ package com.project.command.service;
 import com.project.command.component.interfaces.RecommendationsRuleSet;
 import com.project.command.model.RecommendationsDTO;
 import com.project.command.service.interfaces.RecommendationsService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,14 +13,18 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class RecommendationsServiceImpl implements RecommendationsService {
 
-    private final List<RecommendationsRuleSet> rules;
+    private  List<RecommendationsRuleSet> rules;
 
     public RecommendationsServiceImpl(List<RecommendationsRuleSet> rules) {
         this.rules = rules;
     }
 
+    public RecommendationsServiceImpl(){
+
+    }
     @Override
     public List<RecommendationsDTO> getRecommendations(UUID userId) {
         return rules.stream()

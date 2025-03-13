@@ -1,5 +1,4 @@
 -- liquibase formatted sql
-
 -- changeset IrinaSerebryakova:2
 CREATE TABLE dynamic_rules (id SERIAL, query TEXT, arguments character, negate boolean);
 

@@ -48,5 +48,4 @@ public class RecommendationsConstants {
     public final static RecommendationsDTO SAVING = new RecommendationsDTO(PRODUCT_NAME_SAVING, PRODUCT_ID_SAVING, PRODUCT_TEXT_SAVING);
     public final static RecommendationsDTO CREDIT = new RecommendationsDTO(PRODUCT_NAME_CREDIT, PRODUCT_ID_CREDIT, PRODUCT_TEXT_CREDIT);
     public final static List<RecommendationsDTO> recommendations = List.of(INVEST, SAVING, CREDIT);
-
 }
