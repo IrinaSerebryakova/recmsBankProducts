@@ -21,6 +21,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     CacheManager cacheManager;
+
     @Override
     public RequestDTO getRequest(UUID requestId) {
 //        if (cacheManager.containsKey(requestId)) {

@@ -2,11 +2,10 @@ package com.project.command.controller;
 
 import com.project.command.model.DynamicRule;
 import com.project.command.service.interfaces.DynamicRuleService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/rule")
@@ -22,14 +21,13 @@ public class DynamicRuleController {
         return dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations(dynamicRule);
     }
 
+    @DeleteMapping("/{dynamicRuleId}")
+    public Optional<DynamicRule> deleteDynamicRuleOfRecommendations(@PathVariable Long dynamicRuleId){
+        return dynamicRuleServiceImpl.deleteDynamicRuleOfRecommendations(dynamicRuleId);
+    }
+
     @GetMapping
     public List<DynamicRule> getListOfDynamicRulesOfRecommendations(){
         return dynamicRuleServiceImpl.getListOfDynamicRulesOfRecommendations();
     }
-
-    @DeleteMapping("/{dynamicRuleId}")
-    public DynamicRule deleteDynamicRuleOfRecommendations(@PathVariable UUID dynamicRuleId){
-        return dynamicRuleServiceImpl.deleteDynamicRuleOfRecommendations(dynamicRuleId);
-    }
-
 }

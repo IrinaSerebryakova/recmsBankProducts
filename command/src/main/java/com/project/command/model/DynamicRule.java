@@ -1,9 +1,10 @@
 package com.project.command.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "dynamic_rules")
@@ -11,21 +12,26 @@ public class DynamicRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID dynamicRuleId;
+    private Long dynamicRuleId;
 
     private String query; // тип запроса
-    private String arguments; // аргументы запроса
+    private List<String> arguments; // аргументы запроса
     private boolean negate; // модификатор отрицания
 
-    public DynamicRule(){
-    }
+    @ManyToOne
+    @JoinColumn(name = "productId")
+    @JsonBackReference
+    private Recommendation recommendation;
 
-    public DynamicRule(String query, String arguments, boolean negate) {
+    public DynamicRule(String query, List<String> arguments, boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
     }
 
+    public DynamicRule() {
+
+    }
 
     public String getQuery() {
         return query;
@@ -35,11 +41,11 @@ public class DynamicRule {
         this.query = query;
     }
 
-    public String getArguments() {
+    public List<String> getArguments() {
         return arguments;
     }
 
-    public void setArguments(String arguments) {
+    public void setArguments(List<String> arguments) {
         this.arguments = arguments;
     }
 
@@ -51,11 +57,11 @@ public class DynamicRule {
         this.negate = negate;
     }
 
-    public UUID getDynamicRuleId() {
+    public Long getDynamicRuleId() {
         return dynamicRuleId;
     }
 
-    public void setDynamicRuleId(UUID id) {
+    public void setDynamicRuleId(Long id) {
         this.dynamicRuleId = id;
     }
 

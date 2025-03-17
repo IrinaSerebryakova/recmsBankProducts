@@ -1,6 +1,6 @@
 package com.project.command.controller;
 
-import com.project.command.model.RecommendationsDTO;
+import com.project.command.model.Recommendation;
 import com.project.command.service.interfaces.RecommendationsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,7 @@ public class RecommendationsController {
     }
 
     @GetMapping("/recommendation/{userId}")
-    public List<RecommendationsDTO> getRecommendationByUserId(@PathVariable UUID userId) {
+    public List<String> getRecommendationByUserId(@PathVariable UUID userId) {
         return recommendationsServiceImpl.getRecommendations(userId);
     }
 }

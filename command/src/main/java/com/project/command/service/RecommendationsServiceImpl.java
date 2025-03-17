@@ -2,10 +2,13 @@
 package com.project.command.service;
 
 import com.project.command.component.interfaces.RecommendationsRuleSet;
-import com.project.command.model.RecommendationsDTO;
+import com.project.command.model.Recommendation;
+import com.project.command.repository.DynamicRuleRepository;
 import com.project.command.service.interfaces.RecommendationsService;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,23 +19,18 @@ import java.util.stream.Collectors;
 @Transactional
 public class RecommendationsServiceImpl implements RecommendationsService {
 
-    private  List<RecommendationsRuleSet> rules;
+    private final List<RecommendationsRuleSet> rules;
 
-    public RecommendationsServiceImpl(List<RecommendationsRuleSet> rules) {
+    @Autowired
+    public RecommendationsServiceImpl(List<RecommendationsRuleSet> rules){
         this.rules = rules;
     }
 
-    public RecommendationsServiceImpl(){
-
-    }
     @Override
-    public List<RecommendationsDTO> getRecommendations(UUID userId) {
+    public List<String> getRecommendations(UUID userId) {
         return rules.stream()
                 .map(rule -> rule.evaluateRules(userId))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .collect(Collectors.toList());
     }
-
 }
-

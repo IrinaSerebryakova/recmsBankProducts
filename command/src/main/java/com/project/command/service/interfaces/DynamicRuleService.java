@@ -1,10 +1,9 @@
 package com.project.command.service.interfaces;
 
 import com.project.command.model.DynamicRule;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public interface DynamicRuleService {
 
@@ -12,5 +11,5 @@ public interface DynamicRuleService {
 
     List<DynamicRule> getListOfDynamicRulesOfRecommendations();
 
-    DynamicRule deleteDynamicRuleOfRecommendations(UUID dynamicRuleId);
+    Optional<DynamicRule> deleteDynamicRuleOfRecommendations(Long dynamicRuleId);
 }
