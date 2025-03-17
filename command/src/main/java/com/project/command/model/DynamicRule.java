@@ -15,7 +15,7 @@ public class DynamicRule {
     private Long dynamicRuleId;
 
     private String query; // тип запроса
-    private List<String> arguments; // аргументы запроса
+    private List<Object> arguments; // аргументы запроса
     private boolean negate; // модификатор отрицания
 
     @ManyToOne
@@ -23,7 +23,7 @@ public class DynamicRule {
     @JsonBackReference
     private Recommendation recommendation;
 
-    public DynamicRule(String query, List<String> arguments, boolean negate) {
+    public DynamicRule(String query, List<Object> arguments, boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
@@ -41,11 +41,11 @@ public class DynamicRule {
         this.query = query;
     }
 
-    public List<String> getArguments() {
+    public List<Object> getArguments() {
         return arguments;
     }
 
-    public void setArguments(List<String> arguments) {
+    public void setArguments(List<Object> arguments) {
         this.arguments = arguments;
     }
 
@@ -79,11 +79,10 @@ public class DynamicRule {
 
     @Override
     public String toString() {
-        return "DynamicRule{" +
-                "id=" + dynamicRuleId +
-                ", query='" + query + '\'' +
-                ", arguments='" + arguments + '\'' +
-                ", negate=" + negate +
+        return "rule{" +
+                "\"query=\"" + query + "," + '\'' +
+                "\"arguments='" + arguments + "," + '\'' +
+                "\"negate=" + negate +
                 '}';
     }
 }

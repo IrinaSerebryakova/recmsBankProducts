@@ -4,7 +4,7 @@
 CREATE TABLE dynamic_rules (id SERIAL PRIMARY KEY, query TEXT, arguments TEXT ARRAY, negate boolean);
 
 -- changeset IrinaSerebryakova:2
-CREATE TABLE recommendations (id SERIAL PRIMARY KEY, productName TEXT, productId UUID, productText TEXT);
+CREATE TABLE recommendations (id SERIAL PRIMARY KEY, productName TEXT, productId UUID, productText TEXT, rule TEXT ARRAY);
 
 -- changeset IrinaSerebryakova:3
 CREATE INDEX dynamic_rules_index ON dynamic_rules(query);
@@ -13,9 +13,6 @@ CREATE INDEX dynamic_rules_index ON dynamic_rules(query);
 CREATE INDEX recommendations_productName_index ON recommendations (productName);
 
 -- changeset IrinaSerebryakova:5
-ALTER TABLE dynamic_rules ADD column product_id UUID;
-
--- changeset IrinaSerebryakova:6
 INSERT INTO recommendations
     VALUES ( 1, 'Invest 500','147f6a0f-3b91-413b-ab99-87f081d60d5a',
             'Откройте свой путь к успеху с индивидуальным инвестиционным счетом (ИИС) от нашего банка! ' ||

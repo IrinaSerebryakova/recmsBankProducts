@@ -22,9 +22,14 @@ public class RecommendationsRepository implements JpaRepository<DynamicRule, Lon
 
     private final JdbcTemplate jdbcTemplate;
     private final static Logger logger = LoggerFactory.getLogger(RecommendationsRepository.class);
+    private final DynamicRuleRepository dynamicRuleRepository;
+    private List<Object> arguments;
+    private DynamicRule dynamicRule;
 
-    public RecommendationsRepository(JdbcTemplate jdbcTemplate) {
+
+    public RecommendationsRepository(JdbcTemplate jdbcTemplate, DynamicRuleRepository dynamicRuleRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.dynamicRuleRepository = dynamicRuleRepository;
     }
 
     public int getRandomTransactionAmount(UUID userId) {
@@ -83,6 +88,26 @@ public class RecommendationsRepository implements JpaRepository<DynamicRule, Lon
                     userId,
                     productType);
             logger.info("Result of method checking rule \"isTheUserOfTheProduct\" with input parameters {}, {} is {}", userId, productType, result);
+
+            //следующий запрос проверяет, есть ли такое правило в таблице,
+            // если нет, то добавляет созданное правило в таблицу
+            arguments = List.of(productType);
+            dynamicRule = new DynamicRule("USER_OF", arguments, true);
+
+            try {
+                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
+                        "SELECT * FROM dynamic_rules WHERE query = ?;",
+                        Boolean.class, "USER_OF");
+                logger.info("Database search result for query {} is {}", dynamicRule.getQuery(), dataBaseSearchResult);
+                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
+
+                    dynamicRuleRepository.save(dynamicRule);
+                }
+            }catch (Exception ex) {
+                logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
+                return false;
+            }
+
             return result != null && result;
         } catch (Exception e) {
             logger.error("Error in \"isTheUserOfTheProduct\" for userId: {}, message: {}", userId, e.getMessage(), e);
@@ -108,6 +133,25 @@ public class RecommendationsRepository implements JpaRepository<DynamicRule, Lon
                     userId,
                     productType);
             logger.info("Result of method checking rule \"isTheActiveUserOfTheProduct\" with input parameters {}, {} is {}", userId, productType, result);
+
+            //следующий запрос проверяет, есть ли такое правило в таблице,
+            // если нет, то добавляет созданное правило в таблицу
+            arguments = List.of(productType);
+            dynamicRule = new DynamicRule("ACTIVE_USER_OF", arguments, true);
+
+            try {
+                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
+                        "SELECT * FROM dynamic_rules WHERE query = ?;",
+                        Boolean.class, "ACTIVE_USER_OF");
+                logger.info("Database search result for query {} is {}", dynamicRule.getQuery(), dataBaseSearchResult);
+                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
+                    dynamicRuleRepository.save(dynamicRule);
+                }
+            }catch (Exception ex) {
+                logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
+                return false;
+            }
+
             return result != null && result;
         } catch (Exception e) {
             logger.error("Error in \"isTheActiveUserOfTheProduct\" for userId: {}, message: {}", userId, e.getMessage(), e);
@@ -135,6 +179,25 @@ public class RecommendationsRepository implements JpaRepository<DynamicRule, Lon
                             "WHERE t.user_id = ?;",
                     Boolean.class, transactionType, productType, operationType, amountForComparing, userId);
             logger.info("Result of method checking rule \"comparingTransactionAmounts\" is {}", result);
+
+            //следующий запрос проверяет, есть ли такое правило в таблице,
+            // если нет, то добавляет созданное правило в таблицу
+            arguments = List.of(transactionType, productType, operationType, amountForComparing);
+            dynamicRule = new DynamicRule("TRANSACTION_SUM_COMPARE", arguments, true);
+
+            try {
+                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
+                        "SELECT * FROM dynamic_rules WHERE query = ?;",
+                        Boolean.class, "TRANSACTION_SUM_COMPARE");
+                logger.info("Database search result for query {} is {}", dynamicRule.getQuery(), dataBaseSearchResult);
+                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
+                    dynamicRuleRepository.save(dynamicRule);
+                }
+            }catch (Exception ex) {
+                    logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
+                    return false;
+                }
+
             return result != null && result;
         } catch (Exception e) {
             logger.error("Error in \"comparingTransactionAmounts\" for userId: {}, message: {}",
@@ -164,6 +227,26 @@ public class RecommendationsRepository implements JpaRepository<DynamicRule, Lon
                     operationType,
                     productType);
             logger.info("Result of method checking rule \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" is {}", result);
+
+            //следующий запрос проверяет, есть ли такое правило в таблице,
+            // если нет, то добавляет созданное правило в таблицу
+
+            arguments = List.of(productType, operationType);
+            dynamicRule = new DynamicRule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", arguments, true);
+
+            try {
+                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
+                        "SELECT * FROM dynamic_rules WHERE query = ?;",
+                        Boolean.class, "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW");
+                logger.info("Database search result for query {} is {}", dynamicRule.getQuery(), dataBaseSearchResult);
+                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
+                    dynamicRuleRepository.save(dynamicRule);
+                }
+            }catch (Exception ex) {
+                logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
+                return false;
+            }
+
             return result != null && result;
         } catch (Exception e) {
             logger.error("Error in \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" for userId: {}, message: {}", userId, e.getMessage(), e);
