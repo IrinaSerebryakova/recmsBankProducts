@@ -21,7 +21,7 @@ public class DynamicRuleController {
        dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations(dynamicRule);
     }
 
-    @DeleteMapping("/{dynamicRuleId}")
+   @DeleteMapping("/{dynamicRuleId}")
     public Optional<DynamicRule> deleteDynamicRuleOfRecommendations(@PathVariable Long dynamicRuleId){
         return dynamicRuleServiceImpl.deleteDynamicRuleOfRecommendations(dynamicRuleId);
     }

@@ -14,13 +14,14 @@ public class DynamicRuleRepository {
 
     private final JdbcTemplate jdbcTemplate;
     private final static Logger logger = LoggerFactory.getLogger(DynamicRuleRepository.class);
+    private RecommendationsRepository recommendationsRepository;
 
     public DynamicRuleRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
     public void save(DynamicRule dynamicRule) {
-        jdbcTemplate.update("INSERT INTO dynamic_rules VALUES {}, {}, {}", dynamicRule.getDynamicRuleId(), dynamicRule.getQuery(), dynamicRule.getArguments(), true);
+        jdbcTemplate.update("INSERT INTO dynamic_rules VALUES {}, {}, {}, {}", dynamicRule.getId(), dynamicRule.getQuery(), dynamicRule.getArguments(), true, recommendationsRepository.getCounterOfRecommendations());
         logger.info("Dynamic rule \"{}\" was successfully created in database", dynamicRule.getQuery());
     }
 

@@ -27,8 +27,8 @@ public class SavingRecommendationsRuleSetImpl implements RecommendationsRuleSet 
     public Optional<String> evaluateRules(UUID userId) {
         try {
             boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, "DEBIT") &&
-                    (recommendationsRepository.comparingTransactionAmounts(userId, "DEPOSIT", "DEBIT", ">=", 50_000) ||
-                            recommendationsRepository.comparingTransactionAmounts(userId, "DEPOSIT", "SAVING", ">=", 50_000)) &&
+                    (recommendationsRepository.comparingTransactionAmounts(userId, "DEPOSIT", "DEBIT", ">=", "50000") ||
+                            recommendationsRepository.comparingTransactionAmounts(userId, "DEPOSIT", "SAVING", ">=", "50_000")) &&
                     recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, "DEBIT", ">");
             return Optional.ofNullable(evaluate ? recommendationsRepository.getRecommendation(SAVING) : null);
         } catch (NullPointerException e) {

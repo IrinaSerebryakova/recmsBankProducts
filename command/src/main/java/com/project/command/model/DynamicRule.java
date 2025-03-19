@@ -1,6 +1,9 @@
 package com.project.command.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.project.command.converter.ListToArrayConverter;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -12,19 +15,23 @@ public class DynamicRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long dynamicRuleId;
+    private Long id;
 
     private String query; // тип запроса
-   private List<Object> arguments; // аргументы запроса
+
+
+    @Convert(converter = ListToArrayConverter.class)
+    private List<String> arguments; // аргументы запроса
+
     private boolean negate; // модификатор отрицания
 
     @ManyToOne
-    @JoinColumn(name = "productId")
+    @JoinColumn(name = "recommendation_id")
     @JsonBackReference
     private Recommendation recommendation;
 
-    public DynamicRule(String query, List<Object> arguments, boolean negate) {
+    @JsonCreator
+    public DynamicRule(@JsonProperty String query, @JsonProperty List<String> arguments, @JsonProperty boolean negate) {
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
@@ -42,11 +49,11 @@ public class DynamicRule {
         this.query = query;
     }
 
-    public List<Object> getArguments() {
+    public List<String> getArguments() {
         return arguments;
     }
 
-    public void setArguments(List<Object> arguments) {
+    public void setArguments(List<String> arguments) {
         this.arguments = arguments;
     }
 
@@ -58,24 +65,24 @@ public class DynamicRule {
         this.negate = negate;
     }
 
-    public Long getDynamicRuleId() {
-        return dynamicRuleId;
+    public Long getId() {
+        return id;
     }
 
-    public void setDynamicRuleId(Long id) {
-        this.dynamicRuleId = id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         DynamicRule that = (DynamicRule) o;
-        return negate == that.negate && Objects.equals(dynamicRuleId, that.dynamicRuleId) && Objects.equals(query, that.query) && Objects.equals(arguments, that.arguments);
+        return negate == that.negate && Objects.equals(id, that.id) && Objects.equals(query, that.query) && Objects.equals(arguments, that.arguments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dynamicRuleId, query, arguments, negate);
+        return Objects.hash(id, query, arguments, negate);
     }
 
     @Override

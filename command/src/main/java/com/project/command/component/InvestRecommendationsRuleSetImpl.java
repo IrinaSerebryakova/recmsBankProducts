@@ -27,7 +27,7 @@ public class InvestRecommendationsRuleSetImpl implements RecommendationsRuleSet 
         try {
             boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, "DEBIT") &&
                     !recommendationsRepository.isTheUserOfTheProduct(userId, "INVEST") &&
-                    recommendationsRepository.comparingTransactionAmounts(userId, "DEPOSIT", "SAVING", ">", 1_000);
+                    recommendationsRepository.comparingTransactionAmounts(userId, "DEPOSIT", "SAVING", ">", "1000");
             return Optional.ofNullable(evaluate ? recommendationsRepository.getRecommendation(INVEST) : null);
         } catch (NullPointerException e) {
             logger.error("При проверке id {} на соответствие набору правил выброшено исключение {} {}", userId, e, e.getMessage());

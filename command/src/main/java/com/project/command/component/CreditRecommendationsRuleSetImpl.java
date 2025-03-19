@@ -27,7 +27,7 @@ public class CreditRecommendationsRuleSetImpl implements RecommendationsRuleSet 
         try {
             boolean evaluate = recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, "DEBIT", ">") &&
                                recommendationsRepository.isTheUserOfTheProduct(userId, "CREDIT") &&
-                               recommendationsRepository.comparingTransactionAmounts(userId, "WITHDRAW", "DEBIT", ">", 100_000);
+                               recommendationsRepository.comparingTransactionAmounts(userId, "WITHDRAW", "DEBIT", ">", "100000");
 
             return Optional.ofNullable(evaluate ? recommendationsRepository.getRecommendation(CREDIT) : null);
         } catch (NullPointerException e) {

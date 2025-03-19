@@ -24,7 +24,6 @@ public class DynamicRuleServiceImpl implements DynamicRuleService {
     public DynamicRuleServiceImpl() {
     }
 
-    @Override
     public void createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule) {
        dynamicRuleRepository.save(dynamicRule);
     }
