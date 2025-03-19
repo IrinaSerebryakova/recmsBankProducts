@@ -6,7 +6,6 @@ import com.project.command.service.interfaces.DynamicRuleService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,8 +25,8 @@ public class DynamicRuleServiceImpl implements DynamicRuleService {
     }
 
     @Override
-    public DynamicRule createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule) {
-        return dynamicRuleRepository.save(dynamicRule);
+    public void createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule) {
+       dynamicRuleRepository.save(dynamicRule);
     }
 
     public Optional<DynamicRule> deleteDynamicRuleOfRecommendations(Long dynamicRuleId) {

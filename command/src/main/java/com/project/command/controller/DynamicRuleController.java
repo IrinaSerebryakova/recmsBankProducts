@@ -17,8 +17,8 @@ public class DynamicRuleController {
     }
 
     @PostMapping
-    public DynamicRule createNewDynamicRuleOfRecommendations(@PathVariable DynamicRule dynamicRule){
-        return dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations(dynamicRule);
+    public void createNewDynamicRuleOfRecommendations(@PathVariable DynamicRule dynamicRule){
+       dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations(dynamicRule);
     }
 
     @DeleteMapping("/{dynamicRuleId}")

@@ -12,10 +12,11 @@ public class DynamicRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long dynamicRuleId;
 
     private String query; // тип запроса
-    private List<Object> arguments; // аргументы запроса
+   private List<Object> arguments; // аргументы запроса
     private boolean negate; // модификатор отрицания
 
     @ManyToOne

@@ -1,6 +1,5 @@
 package com.project.command.controller;
 
-import com.project.command.model.Recommendation;
 import com.project.command.service.interfaces.RecommendationsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

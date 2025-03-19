@@ -3,32 +3,26 @@ package com.project.command.repository;
 import com.project.command.model.DynamicRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
 
 @Repository
-public class RecommendationsRepository implements JpaRepository<DynamicRule, Long> {
+public class RecommendationsRepository{
 
-    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     private final static Logger logger = LoggerFactory.getLogger(RecommendationsRepository.class);
     private final DynamicRuleRepository dynamicRuleRepository;
     private List<Object> arguments;
     private DynamicRule dynamicRule;
 
 
-    public RecommendationsRepository(JdbcTemplate jdbcTemplate, DynamicRuleRepository dynamicRuleRepository) {
-        this.jdbcTemplate = jdbcTemplate;
+    public RecommendationsRepository(DynamicRuleRepository dynamicRuleRepository) {
         this.dynamicRuleRepository = dynamicRuleRepository;
     }
 
@@ -252,155 +246,5 @@ public class RecommendationsRepository implements JpaRepository<DynamicRule, Lon
             logger.error("Error in \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" for userId: {}, message: {}", userId, e.getMessage(), e);
             return false;
         }
-    }
-
-    @Override
-    public void flush() {
-
-    }
-
-    @Override
-    public <S extends DynamicRule> S saveAndFlush(S entity) {
-        return null;
-    }
-
-    @Override
-    public <S extends DynamicRule> List<S> saveAllAndFlush(Iterable<S> entities) {
-        return List.of();
-    }
-
-    @Override
-    public void deleteAllInBatch(Iterable<DynamicRule> entities) {
-
-    }
-
-    @Override
-    public void deleteAllByIdInBatch(Iterable<Long> longs) {
-
-    }
-
-    @Override
-    public void deleteAllInBatch() {
-
-    }
-
-    @Override
-    public DynamicRule getOne(Long aLong) {
-        return null;
-    }
-
-    @Override
-    public DynamicRule getById(Long aLong) {
-        return null;
-    }
-
-    @Override
-    public DynamicRule getReferenceById(Long aLong) {
-        return null;
-    }
-
-    @Override
-    public <S extends DynamicRule> Optional<S> findOne(Example<S> example) {
-        return Optional.empty();
-    }
-
-    @Override
-    public <S extends DynamicRule> List<S> findAll(Example<S> example) {
-        return List.of();
-    }
-
-    @Override
-    public <S extends DynamicRule> List<S> findAll(Example<S> example, Sort sort) {
-        return List.of();
-    }
-
-    @Override
-    public <S extends DynamicRule> Page<S> findAll(Example<S> example, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public <S extends DynamicRule> long count(Example<S> example) {
-        return 0;
-    }
-
-    @Override
-    public <S extends DynamicRule> boolean exists(Example<S> example) {
-        return false;
-    }
-
-    @Override
-    public <S extends DynamicRule, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-        return null;
-    }
-
-    @Override
-    public <S extends DynamicRule> S save(S entity) {
-        return null;
-    }
-
-    @Override
-    public <S extends DynamicRule> List<S> saveAll(Iterable<S> entities) {
-        return List.of();
-    }
-
-    @Override
-    public Optional<DynamicRule> findById(Long aLong) {
-        return Optional.empty();
-    }
-
-    @Override
-    public boolean existsById(Long aLong) {
-        return false;
-    }
-
-    @Override
-    public List<DynamicRule> findAll() {
-        return List.of();
-    }
-
-    @Override
-    public List<DynamicRule> findAllById(Iterable<Long> longs) {
-        return List.of();
-    }
-
-    @Override
-    public long count() {
-        return 0;
-    }
-
-    @Override
-    public void deleteById(Long aLong) {
-
-    }
-
-    @Override
-    public void delete(DynamicRule entity) {
-
-    }
-
-    @Override
-    public void deleteAllById(Iterable<? extends Long> longs) {
-
-    }
-
-    @Override
-    public void deleteAll(Iterable<? extends DynamicRule> entities) {
-
-    }
-
-    @Override
-    public void deleteAll() {
-
-    }
-
-    @Override
-    public List<DynamicRule> findAll(Sort sort) {
-        return List.of();
-    }
-
-    @Override
-    public Page<DynamicRule> findAll(Pageable pageable) {
-        return null;
     }
 }

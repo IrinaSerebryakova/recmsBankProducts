@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface DynamicRuleService {
 
-    DynamicRule createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule);
+    void createNewDynamicRuleOfRecommendations(DynamicRule dynamicRule);
 
     List<DynamicRule> getListOfDynamicRulesOfRecommendations();
 

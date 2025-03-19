@@ -25,7 +25,7 @@ public class Recommendation {
     @JsonManagedReference
     private List<DynamicRule> dynamicRules;
 
-    public Recommendation(String productName, UUID productId, String productText, List<DynamicRule>  dynamicRules) {
+    public Recommendation(String productName, UUID productId, String productText, List<DynamicRule> dynamicRules) {
         this.productId = productId;
         this.productName = productName;
         this.productText = productText;

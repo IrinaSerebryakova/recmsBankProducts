@@ -1,7 +1,6 @@
 package com.project.command.component;
 
 import com.project.command.component.interfaces.RecommendationsRuleSet;
-import com.project.command.repository.DynamicRuleRepository;
 import com.project.command.repository.RecommendationsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
