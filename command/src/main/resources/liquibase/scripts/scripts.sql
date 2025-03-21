@@ -3,7 +3,7 @@
 -- changeset IrinaSerebryakova:1
 CREATE TABLE dynamic_rules
 (
-    id        SERIAL PRIMARY KEY,
+    id        BIGINT PRIMARY KEY,
     query     TEXT,
     arguments TEXT ARRAY,
     negate    boolean,
@@ -28,13 +28,13 @@ CREATE INDEX recommendations_productName_index ON recommendations (productName);
 
 
 -- changeset IrinaSerebryakova:5
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('USER_OF', ARRAY ['DEBIT'], true, 1);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (1, 'USER_OF', ARRAY ['DEBIT'], true, 1);
 
 -- changeset IrinaSerebryakova:6
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('USER_OF',  ARRAY['INVEST'], true, 1);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (2,'USER_OF',  ARRAY['INVEST'], true, 1);
 
 -- changeset IrinaSerebryakova:7
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('TRANSACTION_SUM_COMPARE',  ARRAY['DEPOSIT', 'SAVING', '>', '1000'], true, 1);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (3,'TRANSACTION_SUM_COMPARE',  ARRAY['DEPOSIT', 'SAVING', '>', '1000'], true, 1);
 
 -- changeset IrinaSerebryakova:8
 INSERT INTO recommendations (id, productName, productId, productText, rule)
@@ -54,13 +54,13 @@ VALUES (
        );
 
 -- changeset IrinaSerebryakova:9
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('USER_OF', ARRAY ['DEBIT'], true, 2);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (4,'USER_OF', ARRAY ['DEBIT'], true, 2);
 
 -- changeset IrinaSerebryakova:10
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('TRANSACTION_SUM_COMPARE',  ARRAY['DEPOSIT', 'DEBIT', '>=', '50000'], true, 2);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (5,'TRANSACTION_SUM_COMPARE',  ARRAY['DEPOSIT', 'DEBIT', '>=', '50000'], true, 2);
 
 -- changeset IrinaSerebryakova:11
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW',  ARRAY['DEBIT', '>'], true, 2);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (6,'TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW',  ARRAY['DEBIT', '>'], true, 2);
 
 -- changeset IrinaSerebryakova:12
 INSERT INTO recommendations (id, productName, productId, productText, rule)
@@ -87,13 +87,13 @@ VALUES (
        );
 
 -- changeset IrinaSerebryakova:13
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW',  ARRAY['DEBIT', '>'], true, 3);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (7,'TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW',  ARRAY['DEBIT', '>'], true, 3);
 
 -- changeset IrinaSerebryakova:14
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('USER_OF', ARRAY ['CREDIT'], true, 3);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (8,'USER_OF', ARRAY ['CREDIT'], true, 3);
 
 -- changeset IrinaSerebryakova:15
-INSERT INTO dynamic_rules (query, arguments, negate, recommendation_id) VALUES ('TRANSACTION_SUM_COMPARE',  ARRAY['WITHDRAW', 'DEBIT', '>', '100000'], true, 3);
+INSERT INTO dynamic_rules (id, query, arguments, negate, recommendation_id) VALUES (9,'TRANSACTION_SUM_COMPARE',  ARRAY['WITHDRAW', 'DEBIT', '>', '100000'], true, 3);
 
 -- changeset IrinaSerebryakova:16
 INSERT INTO recommendations (id, productName, productId, productText, rule)
@@ -113,3 +113,23 @@ VALUES (3, 'Простой кредит', 'ab138afb-f3ba-4a93-b74f-0fcee86d447f'
                 WHERE recommendation_id = 3
         )
        );
+
+-- changeset IrinaSerebryakova:17
+CREATE TABLE stats
+(
+    rule_id BIGINT,
+    count INTEGER NOT NULL DEFAULT 0
+);
+
+/*-- changeset IrinaSerebryakova:18
+ALTER TABLE stats
+    ADD CONSTRAINT fk_rule_id
+        FOREIGN KEY (rule_id) REFERENCES dynamic_rules(id);
+*/
+-- changeset IrinaSerebryakova:19
+CREATE INDEX stats_index ON stats (rule_id);
+
+-- changeset IrinaSerebryakova:20
+INSERT INTO stats (rule_id)
+SELECT id
+FROM dynamic_rules;

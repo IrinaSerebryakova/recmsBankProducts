@@ -22,7 +22,6 @@ public class RecommendationsServiceImpl implements RecommendationsService {
 
     private final List<RecommendationsRuleSet> rules;
 
-
     @Autowired
     private JdbcTemplate jdbcTemplate;
 

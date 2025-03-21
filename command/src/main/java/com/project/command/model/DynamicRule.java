@@ -2,6 +2,7 @@ package com.project.command.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.command.converter.ListToArrayConverter;
 import jakarta.persistence.*;
@@ -29,6 +30,10 @@ public class DynamicRule {
     @JoinColumn(name = "recommendation_id")
     @JsonBackReference
     private Recommendation recommendation;
+
+    @OneToOne(mappedBy = "dynamicRule")
+    @JsonManagedReference
+    private Statistics stats;
 
     @JsonCreator
     public DynamicRule(@JsonProperty String query, @JsonProperty List<String> arguments, @JsonProperty boolean negate) {
@@ -88,9 +93,9 @@ public class DynamicRule {
     @Override
     public String toString() {
         return "rule{" +
-                "\"query=\"" + query + "," + '\'' +
-                "\"arguments='" + arguments + "," + '\'' +
-                "\"negate=" + negate +
+                "\"query:\"" + query + "," + '\n' +
+                "\"arguments\":" + arguments + "," + '\n' +
+                "\"negate\":" + negate +
                 '}';
     }
 }
