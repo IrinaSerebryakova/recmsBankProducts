@@ -1,10 +1,12 @@
 package com.project.command.controller;
 
 import com.project.command.model.DynamicRule;
+import com.project.command.model.Statistics;
 import com.project.command.service.interfaces.DynamicRuleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,4 +32,10 @@ public class DynamicRuleController {
     public List<DynamicRule> getListOfDynamicRulesOfRecommendations(){
         return dynamicRuleServiceImpl.getListOfDynamicRulesOfRecommendations();
     }
+
+    @GetMapping("/stats")
+    public List<Statistics> getStatisticsOfDynamicRules(){
+        return dynamicRuleServiceImpl.getStatisticsOfDynamicRules();
+    }
+
 }
