@@ -12,10 +12,8 @@ import java.util.Objects;
 public class Statistics {
 
     @Id
-    @Column(name = "rule_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ruleId;
-
+    private int id;
     private int count;
 
     @OneToOne
@@ -34,12 +32,12 @@ public class Statistics {
 
     }
 
-    public Long getRuleId() {
-        return ruleId;
+    public DynamicRule getDynamicRule() {
+        return dynamicRule;
     }
 
-    public void setRuleId(Long ruleId) {
-        this.ruleId = ruleId;
+    public void setDynamicRule(DynamicRule dynamicRule) {
+        this.dynamicRule = dynamicRule;
     }
 
     public int getCount() {
@@ -50,11 +48,24 @@ public class Statistics {
         this.count = count;
     }
 
-    public DynamicRule getDynamicRule() {
-        return dynamicRule;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Statistics that = (Statistics) o;
+        return count == that.count && Objects.equals(dynamicRule, that.dynamicRule);
     }
 
-    public void setDynamicRule(DynamicRule dynamicRule) {
-        this.dynamicRule = dynamicRule;
+    @Override
+    public int hashCode() {
+        return Objects.hash(dynamicRule, count);
+    }
+
+
+    @Override
+    public String toString() {
+        return "stats{ \n" +
+                "\"count\": " + count + '\n' +
+                "\"rule_id\": " + dynamicRule.getId() + '\n' +
+                '}';
     }
 }
