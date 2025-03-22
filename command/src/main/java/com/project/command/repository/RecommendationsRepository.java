@@ -33,7 +33,7 @@ public class RecommendationsRepository{
         counterOfRecommendations++;
         return counterOfRecommendations;
     }
-    
+
     public void createRecommendation(Recommendation recommendation) {
         List<DynamicRule> dynamic_rules = recommendation.getRule();
         for(DynamicRule dynamicRule : dynamic_rules) {
@@ -42,33 +42,13 @@ public class RecommendationsRepository{
 
         jdbcTemplate.update("INSERT INTO recommendations (productName, productId, productText, rule) VALUES {}, {}, {}, {}" +
                         " ARRAY (SELECT ROW(query, arguments, negate) FROM dynamic_rules WHERE recommendation_id = {})",
-                recommendation.getProduct_name(),
-                recommendation.getProduct_id() + "::UUID ",
-                recommendation.getProduct_text(),
+                recommendation.getProductName(),
+                recommendation.getProductId() + "::UUID ",
+                recommendation.getProductText(),
                 dynamic_rules,
                 counterOfRecommendations);
 
-        logger.info("Recommendation \"{}\" was successfully created in database", recommendation.getProduct_name());
-    }
-
-    public int getRandomTransactionAmount(UUID userId) {
-        Integer result = jdbcTemplate.queryForObject(
-                "SELECT amount FROM transactions t WHERE t.user_id = ? LIMIT 1",
-                Integer.class,
-                userId);
-        return result != null ? result : 0;
-    }
-
-    public Optional<String> findUserNameById(UUID userId) {
-        String userName = jdbcTemplate.queryForObject(
-                "SELECT username FROM users t WHERE t.user_id = ?;",
-                String.class,
-                userId);
-        if (userName != null) {
-            return Optional.of(userName);
-        } else {
-            return Optional.empty();
-        }
+        logger.info("Recommendation \"{}\" was successfully created in database", recommendation.getProductName());
     }
 
     public String getRecommendation(String productType) {

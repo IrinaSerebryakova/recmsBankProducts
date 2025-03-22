@@ -1,5 +1,7 @@
 package com.project.command.converter;
 
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.postgresql.jdbc4.Jdbc4Array;
 
 import jakarta.persistence.AttributeConverter;
@@ -8,32 +10,19 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Converter(autoApply = true)
-public class ListToArrayConverter implements AttributeConverter<List<String>, Object> {
+@Converter
+public class ListToArrayConverter implements AttributeConverter<List<String>, String> {
 
     @Override
-    public PostgreSQLTextArray convertToDatabaseColumn(List<String> attribute) {
-        if (attribute == null || attribute.isEmpty()) {
-            return null;
-        }
-        String[] rst = new String[attribute.size()];
-        return new PostgreSQLTextArray(attribute.toArray(rst));
+    public String convertToDatabaseColumn(List<String> attribute) {
+        return String.join(";", attribute);
     }
 
     @Override
-    public List<String> convertToEntityAttribute(Object dbData) {
-
-        List<String> rst = new ArrayList<>();
-        try {
-            String[] elements = (String[]) ((Jdbc4Array) dbData).getArray();
-            for (String element : elements) {
-                rst.add(element);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        return rst;
+    public List<String> convertToEntityAttribute(String dbData) {
+        return Optional.ofNullable(dbData)
+                .filter(StringUtils::isNotBlank)
+                .map(it -> List.of(it.split(";")))
+                .orElseGet(ArrayList::new);
     }
 }
