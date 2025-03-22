@@ -1,12 +1,15 @@
 package com.project.command.repository;
 
 import com.project.command.model.DynamicRule;
+import com.project.command.model.Statistics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -46,5 +49,11 @@ public class DynamicRuleRepository {
         List<DynamicRule> dynamicRules = jdbcTemplate.queryForList("SELECT * FROM dynamic_rules;", DynamicRule.class);
         logger.info("The result of the dynamic rules search in the database: {}", dynamicRules);
         return dynamicRules;
+    }
+
+    public List<Statistics> getStatistics() {
+        List<Statistics> stats = jdbcTemplate.queryForList("SELECT * FROM stats;", Statistics.class);
+        logger.info("The result of the method \"getStatistics\": {}", stats);
+        return stats;
     }
 }

@@ -1,6 +1,7 @@
 package com.project.command.service;
 
 import com.project.command.model.DynamicRule;
+import com.project.command.model.Statistics;
 import com.project.command.repository.DynamicRuleRepository;
 import com.project.command.service.interfaces.DynamicRuleService;
 import jakarta.transaction.Transactional;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -39,4 +41,8 @@ public class DynamicRuleServiceImpl implements DynamicRuleService {
         return dynamicRuleRepository.findAll();
     }
 
+    @Override
+    public List<Statistics> getStatisticsOfDynamicRules() {
+        return dynamicRuleRepository.getStatistics();
+    }
 }

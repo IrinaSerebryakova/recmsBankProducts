@@ -33,7 +33,7 @@ public class RecommendationsRepository{
         counterOfRecommendations++;
         return counterOfRecommendations;
     }
-    
+
     public void createRecommendation(Recommendation recommendation) {
         List<DynamicRule> dynamic_rules = recommendation.getRule();
         for(DynamicRule dynamicRule : dynamic_rules) {
@@ -49,26 +49,6 @@ public class RecommendationsRepository{
                 counterOfRecommendations);
 
         logger.info("Recommendation \"{}\" was successfully created in database", recommendation.getProduct_name());
-    }
-
-    public int getRandomTransactionAmount(UUID userId) {
-        Integer result = jdbcTemplate.queryForObject(
-                "SELECT amount FROM transactions t WHERE t.user_id = ? LIMIT 1",
-                Integer.class,
-                userId);
-        return result != null ? result : 0;
-    }
-
-    public Optional<String> findUserNameById(UUID userId) {
-        String userName = jdbcTemplate.queryForObject(
-                "SELECT username FROM users t WHERE t.user_id = ?;",
-                String.class,
-                userId);
-        if (userName != null) {
-            return Optional.of(userName);
-        } else {
-            return Optional.empty();
-        }
     }
 
     public String getRecommendation(String productType) {
