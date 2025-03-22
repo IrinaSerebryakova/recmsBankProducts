@@ -33,7 +33,7 @@ public class RecommendationsRepository{
         counterOfRecommendations++;
         return counterOfRecommendations;
     }
-    
+
     public void createRecommendation(Recommendation recommendation) {
         List<DynamicRule> dynamic_rules = recommendation.getRule();
         for(DynamicRule dynamicRule : dynamic_rules) {
