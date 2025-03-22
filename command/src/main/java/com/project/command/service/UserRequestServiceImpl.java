@@ -14,9 +14,9 @@ import java.util.UUID;
 @Transactional
 public class UserRequestServiceImpl implements UserRequestService {
 
-   @Cacheable
-   public UserRequestDTO getRequest() { //UUID requestId
-       return new UserRequestDTO();
+    @Cacheable
+    public UserRequestDTO getRequest() { //UUID requestId
+        return new UserRequestDTO();
     }
 
     @Autowired

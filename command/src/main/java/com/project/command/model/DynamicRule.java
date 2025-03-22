@@ -18,7 +18,7 @@ public class DynamicRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String query; // тип запроса
+    private String query; // тип запроса TODO: ENUM
 
 
     @Convert(converter = ListToArrayConverter.class)
