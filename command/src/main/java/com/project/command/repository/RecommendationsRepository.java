@@ -42,13 +42,13 @@ public class RecommendationsRepository{
 
         jdbcTemplate.update("INSERT INTO recommendations (productName, productId, productText, rule) VALUES {}, {}, {}, {}" +
                         " ARRAY (SELECT ROW(query, arguments, negate) FROM dynamic_rules WHERE recommendation_id = {})",
-                recommendation.getProduct_name(),
-                recommendation.getProduct_id() + "::UUID ",
-                recommendation.getProduct_text(),
+                recommendation.getProductName(),
+                recommendation.getProductId() + "::UUID ",
+                recommendation.getProductText(),
                 dynamic_rules,
                 counterOfRecommendations);
 
-        logger.info("Recommendation \"{}\" was successfully created in database", recommendation.getProduct_name());
+        logger.info("Recommendation \"{}\" was successfully created in database", recommendation.getProductName());
     }
 
     public String getRecommendation(String productType) {

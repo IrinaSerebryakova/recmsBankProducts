@@ -18,22 +18,27 @@ public class Recommendation {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private UUID product_id;
-    private String product_name;
-    private String product_text;
+    @Column(name = "product_id")
+    private UUID productId;
+
+    @Column(name = "product_name")
+    private String productName;
+
+    @Column(name = "product_text")
+    private String productText;
 
     @OneToMany(mappedBy = "recommendation")
     @JsonManagedReference
     private List<DynamicRule> rule;
 
     @JsonCreator
-    public Recommendation(@JsonProperty String product_name,
-                          @JsonProperty UUID product_id,
-                          @JsonProperty String product_text,
+    public Recommendation(@JsonProperty String productName,
+                          @JsonProperty UUID productId,
+                          @JsonProperty String productText,
                           @JsonProperty List<DynamicRule> rule) {
-        this.product_id = product_id;
-        this.product_name = product_name;
-        this.product_text = product_text;
+        this.productId = productId;
+        this.productName = productName;
+        this.productText = productText;
         this.rule = rule;
     }
 
@@ -41,28 +46,28 @@ public class Recommendation {
 
     }
 
-    public String getProduct_name() {
-        return product_name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProduct_name(String productName) {
-        this.product_name = productName;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public UUID getProduct_id() {
-        return product_id;
+    public UUID getProductId() {
+        return productId;
     }
 
-    public void setProduct_id(UUID productId) {
-        this.product_id = productId;
+    public void setProductId(UUID productId) {
+        this.productId = productId;
     }
 
-    public String getProduct_text() {
-        return product_text;
+    public String getProductText() {
+        return productText;
     }
 
-    public void setProduct_text(String productText) {
-        this.product_text = productText;
+    public void setProductText(String productText) {
+        this.productText = productText;
     }
 
     public Long getId() {
@@ -76,9 +81,9 @@ public class Recommendation {
     @Override
     public String toString() {
         return "recommendations: [\n" + "{\n" +
-                "\"id\": " + product_id + "," +
-                "\"name\": " + product_name + "," +
-                "\"text\": " + product_text +
+                "\"id\": " + productId + "," +
+                "\"name\": " + productName + "," +
+                "\"text\": " + productText +
                 "}\n" + "]\n";
     }
 
@@ -86,12 +91,12 @@ public class Recommendation {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Recommendation that = (Recommendation) o;
-        return Objects.equals(product_name, that.product_name) && Objects.equals(product_id, that.product_id) && Objects.equals(product_text, that.product_text);
+        return Objects.equals(productName, that.productName) && Objects.equals(productId, that.productId) && Objects.equals(productText, that.productText);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(product_name, product_id, product_text);
+        return Objects.hash(productName, productId, productText);
     }
 
 
