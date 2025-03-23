@@ -118,6 +118,10 @@
 			<version>5.8.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -134,24 +138,26 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>3.4.4</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>build-info</goal>
+						</goals>
+						<configuration>
+							<additionalProperties>
+								<outputFile>${project.build.outputDirectory}/META-INF/build-info.properties</outputFile>
+							</additionalProperties>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.13.0</version>
 				<configuration>
-					<!--<doclet>info.leadinglight.umljavadoclet.UmlJavaDoclet</doclet>
-					<docletArtifact>
-						<groupId>com.github.gboersma</groupId>
-						<artifactId>uml-java-doclet</artifactId>
-						<version>1.1</version>
-					</docletArtifact>
-					<useStandardDocletOptions>true</useStandardDocletOptions>
-					<additionalOptions>
-					</additionalOptions>-->
-					<source>23</source>
-					<target>23</target>
-					<compilerArgs>--enable-preview</compilerArgs>
+					<source>17</source>
 				</configuration>
 			</plugin>
 		</plugins>

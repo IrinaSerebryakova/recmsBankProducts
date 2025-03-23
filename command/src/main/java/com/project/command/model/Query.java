@@ -6,20 +6,22 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.command.converter.ListToArrayConverter;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "dynamic_rules")
-public class DynamicRule {
+@Table(name = "query")
+public class Query {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String query; // тип запроса TODO: ENUM
-
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private EnumType query;
 
     @Convert(converter = ListToArrayConverter.class)
     private List<String> arguments; // аргументы запроса
@@ -27,30 +29,32 @@ public class DynamicRule {
     private boolean negate; // модификатор отрицания
 
     @ManyToOne
-    @JoinColumn(name = "recommendation_id")
+    @JoinColumn(name = "rule_id")
     @JsonBackReference
-    private Recommendation recommendation;
+    private Rule rule;
 
-    @OneToOne(mappedBy = "dynamicRule")
+    @OneToOne(mappedBy = "query")
     @JsonManagedReference
     private Statistics stats;
 
     @JsonCreator
-    public DynamicRule(@JsonProperty String query, @JsonProperty List<String> arguments, @JsonProperty boolean negate) {
+    public Query(Long id, @JsonProperty EnumType query, @JsonProperty List<String> arguments, @JsonProperty boolean negate, Rule rule) {
+        this.id = id;
         this.query = query;
         this.arguments = arguments;
         this.negate = negate;
+        this.rule = rule;
     }
 
-    public DynamicRule() {
+    public Query() {
 
     }
 
-    public String getQuery() {
+    public  EnumType getQuery() {
         return query;
     }
 
-    public void setQuery(String query) {
+    public void setQuery( EnumType query) {
         this.query = query;
     }
 
@@ -81,7 +85,7 @@ public class DynamicRule {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        DynamicRule that = (DynamicRule) o;
+        Query that = (Query) o;
         return negate == that.negate && Objects.equals(id, that.id) && Objects.equals(query, that.query) && Objects.equals(arguments, that.arguments);
     }
 
@@ -90,12 +94,16 @@ public class DynamicRule {
         return Objects.hash(id, query, arguments, negate);
     }
 
+
     @Override
     public String toString() {
-        return "rule{" +
-                "\"query:\"" + query + "," + '\n' +
-                "\"arguments\":" + arguments + "," + '\n' +
-                "\"negate\":" + negate +
+        return "Query{" +
+                "id=" + id +
+                ", query=" + query +
+                ", arguments=" + arguments +
+                ", negate=" + negate +
+                ", rule=" + rule +
+                ", stats=" + stats +
                 '}';
     }
 }

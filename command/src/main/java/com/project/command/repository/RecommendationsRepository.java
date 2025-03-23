@@ -1,81 +1,42 @@
 package com.project.command.repository;
 
-import com.project.command.model.DynamicRule;
-import com.project.command.model.Recommendation;
+import com.project.command.dynamic.constants.ProductType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Repository
-public class RecommendationsRepository{
-    private int counterOfRecommendations;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
+public class RecommendationsRepository {
+    private final JdbcTemplate jdbcTemplate;
     private final static Logger logger = LoggerFactory.getLogger(RecommendationsRepository.class);
-    private final DynamicRuleRepository dynamicRuleRepository;
-    private List<String> arguments;
-    private DynamicRule dynamicRule;
 
-    public RecommendationsRepository(DynamicRuleRepository dynamicRuleRepository) {
-        this.dynamicRuleRepository = dynamicRuleRepository;
+    private final Map<String, Boolean> isTheUserOfTheProduct = new HashMap<>();
+    private final Map<String, Boolean> isTheActiveUserOfTheProduct = new HashMap<>();
+    private final Map<String, Boolean> comparingTransactionAmounts = new HashMap<>();
+    private final Map<String, Boolean> comparingTheAmountOfDepositsWithWithdrawsOfOneProductType = new HashMap<>();
+
+    public RecommendationsRepository(@Qualifier("recommendationsJdbcTemplate") JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
-
-    public int getCounterOfRecommendations() {
-        counterOfRecommendations = jdbcTemplate.update("SELECT COUNT(*) FROM recommendations;");
-        counterOfRecommendations++;
-        return counterOfRecommendations;
-    }
-
-    public void createRecommendation(Recommendation recommendation) {
-        List<DynamicRule> dynamic_rules = recommendation.getRule();
-        for(DynamicRule dynamicRule : dynamic_rules) {
-            dynamicRuleRepository.save(dynamicRule);
-        }
-
-        jdbcTemplate.update("INSERT INTO recommendations (productName, productId, productText, rule) VALUES {}, {}, {}, {}" +
-                        " ARRAY (SELECT ROW(query, arguments, negate) FROM dynamic_rules WHERE recommendation_id = {})",
-                recommendation.getProductName(),
-                recommendation.getProductId() + "::UUID ",
-                recommendation.getProductText(),
-                dynamic_rules,
-                counterOfRecommendations);
-
-        logger.info("Recommendation \"{}\" was successfully created in database", recommendation.getProductName());
-    }
-
-    public String getRecommendation(String productType) {
-        try {
-            String result = jdbcTemplate.queryForObject(
-                    "SELECT productName, productId, productText " +
-                            "FROM recommendations " +
-                            "WHERE productName = ?;",
-                    String.class,
-                    productType);
-            logger.info("Result of method checking rule \"getRecommendation\" is {}", result);
-            return result;
-        } catch (
-                Exception e) {
-            logger.error("Error in \"getRecommendation\", message: {}", e.getMessage(), e);
-            return "";
-        }
-    }
-
 
     /**
      * USER_OF
-     * Пользователь использует как минимум один продукт с типом {productType}.
-     * Данный запрос принимает только один аргумент - тип продукта:
-     * DEBIT, CREDIT, INVEST, SAVING
+     * Проверяет, использует ли пользователь продукт типа productType.
+     *
+     * @param userId
+     * @param productType
      */
-    public boolean isTheUserOfTheProduct (UUID userId, String productType){
+    public Boolean isTheUserOfTheProduct(UUID userId, ProductType productType) {
+        String key = userId.toString() + productType;
+        if (isTheUserOfTheProduct.containsKey(key)) {
+            return isTheUserOfTheProduct.get(key);
+        }
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT COUNT(*) > 0 " +
@@ -88,23 +49,7 @@ public class RecommendationsRepository{
                     productType);
             logger.info("Result of method checking rule \"isTheUserOfTheProduct\" with input parameters {}, {} is {}", userId, productType, result);
 
-/*            //следующий запрос проверяет, есть ли такое правило в таблице,
-            // если нет, то добавляет созданное правило в таблицу
-            arguments = List.of(productType);
-            dynamicRule = new DynamicRule("USER_OF", arguments, true);
-
-            try {
-                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
-                        "SELECT * FROM dynamic_rules WHERE query = ?;",
-                        Boolean.class, "USER_OF");
-                logger.info("Database search result for this query {} is {}", dynamicRule.getQuery(), dataBaseSearchResult);
-                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
-                    dynamicRuleRepository.save(dynamicRule);
-                }
-            }catch (Exception ex) {
-                logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
-                return false;
-            }*/
+            isTheUserOfTheProduct.put(key, result);
 
             return result != null && result;
         } catch (Exception e) {
@@ -115,58 +60,58 @@ public class RecommendationsRepository{
 
     /**
      * ACTIVE_USER_OF
-     * Пользователь использует как минимум один продукт с типом {productType}.
-     * Данный запрос принимает только один аргумент - тип продукта:
-     * DEBIT, CREDIT, INVEST, SAVING
+     * Проверяет, что количество транзакций по продуктам у пользователя, больше или равно 5.
+     *
+     * @param userId
+     * @param productType
      */
-    public boolean isTheActiveUserOfTheProduct (UUID userId, String productType){
+    public Boolean isTheActiveUserOfTheProduct(UUID userId, ProductType productType) {
+        int numberToCompare = 5;
+        String key = userId.toString() + productType;
+        if (isTheActiveUserOfTheProduct.containsKey(key)) {
+            return isTheActiveUserOfTheProduct.get(key);
+        }
         try {
             Boolean result = jdbcTemplate.queryForObject(
-                    "SELECT COUNT(*) > 5 " +
+                    "SELECT COUNT(*) > ? " +
                             "FROM transactions t " +
                             "JOIN products p " +
                             "ON t.product_id = p.id " +
                             "WHERE t.user_id = ? AND p.type = ?;",
                     Boolean.class,
+                    numberToCompare,
                     userId,
                     productType);
             logger.info("Result of method checking rule \"isTheActiveUserOfTheProduct\" with input parameters {}, {} is {}", userId, productType, result);
 
-        /*    //следующий запрос проверяет, есть ли такое правило в таблице,
-            // если нет, то добавляет созданное правило в таблицу
-            arguments = List.of(productType);
-            dynamicRule = new DynamicRule("ACTIVE_USER_OF", arguments, true);
-
-            try {
-                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
-                        "SELECT * FROM dynamic_rules WHERE query = ?;",
-                        Boolean.class, "ACTIVE_USER_OF");
-                logger.info("Database search result for query {} is {}", dynamicRule.getQuery(), dataBaseSearchResult);
-                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
-                    dynamicRuleRepository.save(dynamicRule);
-                }
-            }catch (Exception ex) {
-                logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
-                return false;
-            }*/
+            isTheActiveUserOfTheProduct.put(key, result);
 
             return result != null && result;
+
         } catch (Exception e) {
             logger.error("Error in \"isTheActiveUserOfTheProduct\" for userId: {}, message: {}", userId, e.getMessage(), e);
             return false;
         }
     }
 
+
     /**
      * TRANSACTION_SUM_COMPARE
      * Сумма {transactionType} по всем продуктам типа {productType} {operationType}, чем {String amountForComparing} ₽
-     * Данный запрос принимает четыре аргумента:
-     * Первый аргумент — тип продукта: DEBIT, CREDIT, INVEST, SAVING
-     * Второй аргумент — тип транзакции: WITHDRAW, DEPOSIT
-     * Третий аргумент — оператор сравнения
-     * Четвертый аргумент — неотрицательное целое число int (больше или равно нулю), с которым сравниваем сумму в формате String
+     * Считает сумму транзакций у пользователя.
+     *
+     * @param userId
+     * @param transactionType
+     * @param productType
+     * @param operationType
+     * @param amountForComparing
      */
-    public boolean comparingTransactionAmounts(UUID userId, String transactionType, String productType, String operationType, String amountForComparing) {
+    public Boolean comparingTransactionAmounts(UUID userId, String transactionType, String productType, String operationType, String amountForComparing) {
+        String key = userId.toString() + productType;
+        if (comparingTransactionAmounts.containsKey(key)) {
+            return comparingTransactionAmounts.get(key);
+        }
+
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT CASE " +
@@ -178,24 +123,8 @@ public class RecommendationsRepository{
                     Boolean.class, transactionType, productType, operationType, amountForComparing, userId);
             logger.info("Result of method checking rule \"comparingTransactionAmounts\" is {}", result);
 
-          /*  //следующий запрос проверяет, есть ли такое правило в таблице,
-            // если нет, то добавляет созданное правило в таблицу
-            arguments = List.of(transactionType, productType, operationType, amountForComparing);
-            dynamicRule = new DynamicRule("TRANSACTION_SUM_COMPARE", arguments, true);
+            comparingTransactionAmounts.put(key, result);
 
-            try {
-                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
-                        "SELECT * FROM dynamic_rules WHERE query = ?;",
-                        Boolean.class, "TRANSACTION_SUM_COMPARE");
-                logger.info("Database search result for query {}: {}", dynamicRule.getQuery(), dataBaseSearchResult);
-                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
-                    dynamicRuleRepository.save(dynamicRule);
-                }
-            }catch (Exception ex) {
-                    logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
-                    return false;
-                }
-*/
             return result != null && result;
         } catch (Exception e) {
             logger.error("Error in \"comparingTransactionAmounts\" for userId: {}, message: {}",
@@ -204,51 +133,49 @@ public class RecommendationsRepository{
         }
     }
 
+
     /**
-     *  TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW
-     *  Сравнение суммы пополнений с тратами по всем продуктам одного типа
-     *  Данный запрос принимает два аргумента:
-     *  Первый аргумент — тип продукта: DEBIT, CREDIT, INVEST, SAVING
-     *  Второй аргумент — оператор сравнения
+     * TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW
+     * Сравнение суммы пополнений с тратами по всем продуктам одного типа
+     * @param userId
+     * @param productType
+     * @param operationType
      */
-    public boolean comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(UUID userId, String productType, String operationType) {
-        try {
-            Boolean result = jdbcTemplate.queryForObject(
-                    "SELECT CASE WHEN SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = ?) ? " +
-                            "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = ?) " +
-                            "THEN TRUE ELSE FALSE END " +
-                            "FROM transactions t " +
-                            "JOIN products p ON t.product_id = p.id " +
-                            "WHERE t.user_id = ?;",
-                    Boolean.class,
-                    productType,
-                    operationType,
-                    productType);
-            logger.info("Result of method checking rule \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" is {}", result);
-/*
-            //следующий запрос проверяет, есть ли такое правило в таблице,
-            // если нет, то добавляет созданное правило в таблицу
-
-            arguments = List.of(productType, operationType);
-            dynamicRule = new DynamicRule("TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW", arguments, true);
-
-            try {
-                Boolean dataBaseSearchResult = jdbcTemplate.queryForObject(
-                        "SELECT * FROM dynamic_rules WHERE query = ?;",
-                        Boolean.class, "TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW");
-                logger.info("Database search result for this query {}: is {}.", dynamicRule.getQuery(), dataBaseSearchResult);
-                if (!Boolean.TRUE.equals(dataBaseSearchResult)) {
-                    dynamicRuleRepository.save(dynamicRule);
-                }
-            }catch (Exception ex) {
-                logger.error("Error during saving an object {} to the database, message {}", DynamicRule.class, ex.getMessage(), ex);
-                return false;
-            }*/
-
-            return result != null && result;
-        } catch (Exception e) {
-            logger.error("Error in \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" for userId: {}, message: {}", userId, e.getMessage(), e);
-            return false;
+    public Boolean comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(UUID userId, ProductType productType, String operationType) {
+        String key = userId.toString() + productType;
+        if (comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.containsKey(key)) {
+            return comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.get(key);
         }
+        try{
+        Boolean result = jdbcTemplate.queryForObject(
+                "SELECT CASE WHEN SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = ?) ? " +
+                        "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = ?) " +
+                        "THEN TRUE ELSE FALSE END " +
+                        "FROM transactions t " +
+                        "JOIN products p ON t.product_id = p.id " +
+                        "WHERE t.user_id = ?;",
+                Boolean.class,
+                productType,
+                operationType,
+                productType);
+        logger.info("Result of method checking rule \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" is {}", result);
+
+        comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.put(key, result);
+
+        return result != null && result;
+    } catch(
+    Exception e)
+
+    {
+        logger.error("Error in \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" for userId: {}, message: {}", userId, e.getMessage(), e);
+        return false;
+    }
+}
+
+    public void clearCashes() {
+        isTheUserOfTheProduct.clear();
+        isTheActiveUserOfTheProduct.clear();
+        comparingTransactionAmounts.clear();
+        comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.clear();
     }
 }

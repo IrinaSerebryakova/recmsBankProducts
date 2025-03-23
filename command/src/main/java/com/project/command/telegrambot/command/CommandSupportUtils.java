@@ -3,7 +3,6 @@ package com.project.command.telegrambot.command;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-
 import java.util.Optional;
 
 public class CommandSupportUtils {
