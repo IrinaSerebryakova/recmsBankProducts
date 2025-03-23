@@ -165,7 +165,6 @@ public class RecommendationsRepository {
         return result != null && result;
     } catch(
     Exception e)
-
     {
         logger.error("Error in \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" for userId: {}, message: {}", userId, e.getMessage(), e);
         return false;
