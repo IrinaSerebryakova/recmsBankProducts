@@ -5,15 +5,17 @@ import com.project.command.dynamic.constants.ProductType;
 import com.project.command.repository.RecommendationsRepository;
 import org.springframework.stereotype.Component;
 
+
 import java.util.List;
 import java.util.UUID;
 
 @Component
-public class ActiveUserOf extends AbstractQuery {
+public class UserOf extends AbstractQuery {
+
     private String productType;
     private boolean negate;
 
-    public ActiveUserOf() {
+    public UserOf() {
         super(false); // Значение по умолчанию для negate
         this.productType = null; // Инициализация по умолчанию
     }
@@ -31,11 +33,16 @@ public class ActiveUserOf extends AbstractQuery {
 
     @Override
     protected boolean evaluateRequest(UUID userId, RecommendationsRepository recommendationsRepository) {
-        return recommendationsRepository.isTheActiveUserOfTheProduct(userId, ProductType.valueOf(productType));
+        return recommendationsRepository.isTheUserOfTheProduct(userId, ProductType.valueOf(productType));
     }
 }
 
-   /* protected ActiveUserOf(List<String> args, boolean negate) {
-        super(negate);
-        this.productType = args.get(0);
-    }*/
+/*
+
+private final String productType;
+
+protected UserOf(List<String> args, boolean negate) {
+    super(negate);
+    this.productType = args.get(0);
+}
+*/

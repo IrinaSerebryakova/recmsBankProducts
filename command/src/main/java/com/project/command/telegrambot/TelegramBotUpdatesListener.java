@@ -1,4 +1,3 @@
-/*
 package com.project.command.telegrambot;
 
 import com.pengrad.telegrambot.TelegramBot;
@@ -6,6 +5,11 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.pengrad.telegrambot.response.SendResponse;
+import com.project.command.model.Rule;
+import com.project.command.repository.RecommendationsRepository;
+import com.project.command.telegrambot.command.TelegramCommand;
+import com.project.command.telegrambot.exception.TelegramApiException;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-
- */
-/*TODO  переписать класс под это приложение
-*//*
-
-
+import static com.project.command.telegrambot.command.CommandSupportUtils.userName;
 
 @Service
 @Transactional
@@ -32,13 +31,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     @Autowired
     private List<TelegramCommand> commands;
 
-    private Notification notification;
+    private Rule rule;
     private SendResponse sendResponse;
-    private NotificationRepository notificationRepository;
+    private RecommendationsRepository recommendationsRepository;
 
     @Autowired
-    public TelegramBotUpdatesListener(NotificationRepository notificationRepository) {
-        this.notificationRepository = notificationRepository;
+    public TelegramBotUpdatesListener(RecommendationsRepository recommendationsRepository) {
+        this.recommendationsRepository = recommendationsRepository;
     }
 
     public TelegramBotUpdatesListener() {
@@ -51,7 +50,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        logger.info("The method 'process' was called");
         updates.forEach(update -> {
             logger.info("Processing update: {}", update);
             commands.stream()
@@ -75,5 +73,3 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 }
 
-
-*/

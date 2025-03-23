@@ -1,41 +1,38 @@
 package com.project.command.controller;
 
-import com.project.command.model.DynamicRule;
+import com.project.command.model.Query;
 import com.project.command.model.Statistics;
-import com.project.command.service.interfaces.DynamicRuleService;
+import com.project.command.service.DynamicRuleService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/rule")
 public class DynamicRuleController {
-    private final DynamicRuleService dynamicRuleServiceImpl;
+    private final DynamicRuleService dynamicRuleService;
 
     public DynamicRuleController(DynamicRuleService dynamicRuleServiceImpl) {
-        this.dynamicRuleServiceImpl = dynamicRuleServiceImpl;
+        this.dynamicRuleService = dynamicRuleServiceImpl;
     }
 
     @PostMapping
-    public void createNewDynamicRuleOfRecommendations(@PathVariable DynamicRule dynamicRule){
-       dynamicRuleServiceImpl.createNewDynamicRuleOfRecommendations(dynamicRule);
+    public void createNewDynamicRule(@RequestBody Query query){
+       dynamicRuleService.saveQuery(query);
     }
 
    @DeleteMapping("/{dynamicRuleId}")
-    public Optional<DynamicRule> deleteDynamicRuleOfRecommendations(@PathVariable Long dynamicRuleId){
-        return dynamicRuleServiceImpl.deleteDynamicRuleOfRecommendations(dynamicRuleId);
+    public void deleteDynamicRuleOfRecommendations(@PathVariable Long dynamicRuleId){
+        dynamicRuleService.deleteDynamicRuleOfRecommendations(dynamicRuleId);
     }
 
     @GetMapping
-    public List<DynamicRule> getListOfDynamicRulesOfRecommendations(){
-        return dynamicRuleServiceImpl.getListOfDynamicRulesOfRecommendations();
+    public List<Query> getAllQueries(){
+        return dynamicRuleService.getAllQueries();
     }
 
     @GetMapping("/stats")
     public List<Statistics> getStatisticsOfDynamicRules(){
-        return dynamicRuleServiceImpl.getStatisticsOfDynamicRules();
+        return dynamicRuleService.getStatisticsOfDynamicRules();
     }
-
 }

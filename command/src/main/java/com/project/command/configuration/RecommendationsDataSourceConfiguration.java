@@ -38,8 +38,13 @@ public class RecommendationsDataSourceConfiguration {
 
     @Primary
     @Bean(name = "defaultDataSource")
-    public DataSource defaultDataSource(DataSourceProperties properties) {
+    DataSource defaultDataSource(DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().build();
+    }
+
+    @Bean
+    public boolean negate() {
+        return false;
     }
 
     @Bean

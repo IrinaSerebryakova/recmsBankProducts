@@ -11,8 +11,8 @@ public abstract class AbstractQuery {
     }
 
     public boolean evaluate(UUID userId, RecommendationsRepository recommendationsRepository){
-        return negate != evaluateInternal(userId, recommendationsRepository);
+        return negate != evaluateRequest(userId, recommendationsRepository);
     }
 
-    public abstract boolean evaluateInternal(UUID userId, RecommendationsRepository recommendationsRepository);
+    protected abstract boolean evaluateRequest(UUID userId, RecommendationsRepository recommendationsRepository);
 }

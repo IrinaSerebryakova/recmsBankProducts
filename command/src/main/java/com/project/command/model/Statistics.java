@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 @Entity
 @Table(name = "stats")
 public class Statistics {
@@ -21,12 +19,12 @@ public class Statistics {
     @OneToOne
     @JoinColumn(name = "rule_id")
     @JsonBackReference
-    private DynamicRule dynamicRule;
+    private Query query;
 
 
     @JsonCreator
-    public Statistics(@JsonProperty DynamicRule dynamicRule, @JsonProperty int count) {
-        this.dynamicRule = dynamicRule;
+    public Statistics(@JsonProperty Query query, @JsonProperty int count) {
+        this.query = query;
         this.count = count;
     }
 
@@ -50,11 +48,11 @@ public class Statistics {
         this.count = count;
     }
 
-    public DynamicRule getDynamicRule() {
-        return dynamicRule;
+    public Query getDynamicRule() {
+        return query;
     }
 
-    public void setDynamicRule(DynamicRule dynamicRule) {
-        this.dynamicRule = dynamicRule;
+    public void setDynamicRule(Query query) {
+        this.query = query;
     }
 }

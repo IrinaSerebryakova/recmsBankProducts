@@ -1,4 +1,4 @@
-/*
+
 
 package com.project.command.telegrambot;
 
@@ -12,4 +12,4 @@ public class TelegramBotApplication {
 
 }
 
-*/
+
