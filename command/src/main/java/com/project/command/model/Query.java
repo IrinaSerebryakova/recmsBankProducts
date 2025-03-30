@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.project.command.converter.ListToArrayConverter;
+import com.project.command.dynamic.constants.QueryType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -21,7 +22,7 @@ public class Query {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private EnumType query;
+    private QueryType query;
 
     @Convert(converter = ListToArrayConverter.class)
     private List<String> arguments; // аргументы запроса
@@ -31,14 +32,14 @@ public class Query {
     @ManyToOne
     @JoinColumn(name = "rule_id")
     @JsonBackReference
-    private Rule rule;
+    private Rule rule;     //InvestRuleSet напр
 
     @OneToOne(mappedBy = "query")
     @JsonManagedReference
     private Statistics stats;
 
     @JsonCreator
-    public Query(Long id, @JsonProperty EnumType query, @JsonProperty List<String> arguments, @JsonProperty boolean negate, Rule rule) {
+    public Query(Long id, @JsonProperty QueryType query, @JsonProperty List<String> arguments, @JsonProperty boolean negate, Rule rule) {
         this.id = id;
         this.query = query;
         this.arguments = arguments;
@@ -50,11 +51,11 @@ public class Query {
 
     }
 
-    public  EnumType getQuery() {
+    public QueryType getQuery() {
         return query;
     }
 
-    public void setQuery( EnumType query) {
+    public void setQuery(QueryType query) {
         this.query = query;
     }
 

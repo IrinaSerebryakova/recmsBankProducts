@@ -33,9 +33,10 @@ public class UserOf extends AbstractQuery {
 
     @Override
     protected boolean evaluateRequest(UUID userId, RecommendationsRepository recommendationsRepository) {
-        return recommendationsRepository.isTheUserOfTheProduct(userId, ProductType.valueOf(productType));
+        return recommendationsRepository.isTheUserOfTheProduct(userId, productType);
     }
 }
+
 
 /*
 

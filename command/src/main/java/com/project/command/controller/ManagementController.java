@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/management")
 public class ManagementController {
-    private final BuildProperties buildProperties;
+    private final Optional<BuildProperties> buildProperties;
     private final RecommendationsService recommendationsService;
 
-    public ManagementController(BuildProperties buildProperties, RecommendationsService recommendationsService) {
+    public ManagementController(Optional<BuildProperties> buildProperties, RecommendationsService recommendationsService) {
         this.buildProperties = buildProperties;
         this.recommendationsService = recommendationsService;
     }
@@ -24,8 +25,10 @@ public class ManagementController {
     @GetMapping("/info")
     public Map<String, String> getInfo() {
         Map<String, String> info = new HashMap<>();
-        info.put("name", buildProperties.getName());
-        info.put("version", buildProperties.getVersion());
+        buildProperties.ifPresent(buildProperties -> {
+            info.put("name", buildProperties.getName());
+            info.put("version", buildProperties.getVersion());
+        });
         return info;
     }
 

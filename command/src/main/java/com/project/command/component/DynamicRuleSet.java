@@ -1,3 +1,4 @@
+/*
 package com.project.command.component;
 
 import com.project.command.component.interfaces.RecommendationsRuleSet;
@@ -22,3 +23,4 @@ public class DynamicRuleSet implements RecommendationsRuleSet {
         return Optional.empty();
     }
 }
+*/

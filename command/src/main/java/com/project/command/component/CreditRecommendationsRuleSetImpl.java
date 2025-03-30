@@ -1,9 +1,6 @@
 package com.project.command.component;
 
 import com.project.command.component.interfaces.RecommendationsRuleSet;
-import com.project.command.dynamic.constants.Operator;
-import com.project.command.dynamic.constants.ProductType;
-import com.project.command.dynamic.constants.TransactionType;
 import com.project.command.model.Rule;
 import com.project.command.repository.RecommendationsRepository;
 import org.slf4j.Logger;
@@ -15,6 +12,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.project.command.dynamic.RecommendationsConstants.CREDIT_RECOMMENDATIONS;
+import static com.project.command.dynamic.constants.Operator.GREATER_THAN;
+import static com.project.command.dynamic.constants.ProductType.DEBIT;
+import static com.project.command.dynamic.constants.TransactionType.WITHDRAW;
 
 @Component
 public class CreditRecommendationsRuleSetImpl implements RecommendationsRuleSet {
@@ -37,9 +37,9 @@ public class CreditRecommendationsRuleSetImpl implements RecommendationsRuleSet 
      */
     public Optional<Rule> evaluateRules(UUID userId) {
         boolean  evaluate =
-                !recommendationsRepository.isTheUserOfTheProduct(userId, ProductType.CREDIT) &&
-                (recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, ProductType.DEBIT, String.valueOf(Operator.GREATER_THAN))) &&
-                recommendationsRepository.comparingTransactionAmounts(userId, String.valueOf(TransactionType.WITHDRAW), String.valueOf(ProductType.DEBIT), String.valueOf(Operator.GREATER_THAN), "100000");
+                !recommendationsRepository.isTheUserOfTheProduct(userId, CREDIT) &&
+                (recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name())) &&
+                recommendationsRepository.comparingTransactionAmounts(userId, WITHDRAW.name(), DEBIT.name(), GREATER_THAN.name(), "100000");
         return Optional.ofNullable(evaluate ? CREDIT_RECOMMENDATIONS : null);
     }
 }
