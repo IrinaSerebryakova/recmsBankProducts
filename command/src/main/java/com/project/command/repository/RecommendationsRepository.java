@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -32,7 +33,7 @@ public class RecommendationsRepository {
      * @param userId
      * @param productType
      */
-    public Boolean isTheUserOfTheProduct(UUID userId, ProductType productType) {
+    public Boolean isTheUserOfTheProduct(UUID userId, String productType) {
         String key = userId.toString() + productType;
         if (isTheUserOfTheProduct.containsKey(key)) {
             return isTheUserOfTheProduct.get(key);
@@ -65,7 +66,7 @@ public class RecommendationsRepository {
      * @param userId
      * @param productType
      */
-    public Boolean isTheActiveUserOfTheProduct(UUID userId, ProductType productType) {
+    public Boolean isTheActiveUserOfTheProduct(UUID userId, String productType) {
         int numberToCompare = 5;
         String key = userId.toString() + productType;
         if (isTheActiveUserOfTheProduct.containsKey(key)) {
@@ -114,15 +115,14 @@ public class RecommendationsRepository {
 
         try {
             Boolean result = jdbcTemplate.queryForObject(
-                    "SELECT CASE " +
-                            "WHEN SUM(amount::NUMERIC) FILTER (WHERE t.type = ? AND p.type = ?) ? ?" +
-                            "THEN TRUE ELSE FALSE END " +
+                    "SELECT " +
+                            "COALESCE(SUM(amount::NUMERIC), 0) >= ? AS result " +
                             "FROM transactions t " +
                             "JOIN products p ON t.product_id = p.id " +
-                            "WHERE t.user_id = ?;",
-                    Boolean.class, transactionType, productType, operationType, amountForComparing, userId);
+                            "WHERE t.user_id = ? AND t.type = ? AND p.type = ?",
+                    Boolean.class,
+                    amountForComparing, userId, transactionType, productType);
             logger.info("Result of method checking rule \"comparingTransactionAmounts\" is {}", result);
-
             comparingTransactionAmounts.put(key, result);
 
             return result != null && result;
@@ -137,39 +137,38 @@ public class RecommendationsRepository {
     /**
      * TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW
      * Сравнение суммы пополнений с тратами по всем продуктам одного типа
+     *
      * @param userId
      * @param productType
      * @param operationType
      */
-    public Boolean comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(UUID userId, ProductType productType, String operationType) {
+    public Boolean comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(UUID userId, String productType, String operationType) {
         String key = userId.toString() + productType;
         if (comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.containsKey(key)) {
             return comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.get(key);
         }
-        try{
-        Boolean result = jdbcTemplate.queryForObject(
-                "SELECT CASE WHEN SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = ?) ? " +
-                        "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = ?) " +
-                        "THEN TRUE ELSE FALSE END " +
-                        "FROM transactions t " +
-                        "JOIN products p ON t.product_id = p.id " +
-                        "WHERE t.user_id = ?;",
-                Boolean.class,
-                productType,
-                operationType,
-                productType);
-        logger.info("Result of method checking rule \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" is {}", result);
+        try {
+            Boolean result = jdbcTemplate.queryForObject(
+                    "SELECT " +
+                            "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = ?) >= " +
+                            "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = ?) AS result " +
+                            "FROM transactions t " +
+                            "JOIN products p ON t.product_id = p.id " +
+                            "WHERE t.user_id = ?",
+                    Boolean.class,
+                    productType, productType, userId
+            );
+            logger.info("Result of method checking rule \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" is {}", result);
 
-        comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.put(key, result);
+            comparingTheAmountOfDepositsWithWithdrawsOfOneProductType.put(key, result);
 
-        return result != null && result;
-    } catch(
-    Exception e)
-    {
-        logger.error("Error in \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" for userId: {}, message: {}", userId, e.getMessage(), e);
-        return false;
+            return result != null && result;
+        } catch (
+                Exception e) {
+            logger.error("Error in \"comparingTheAmountOfDepositsWithWithdrawsOfOneProductType\" for userId: {}, message: {}", userId, e.getMessage(), e);
+            return false;
+        }
     }
-}
 
     public void clearCashes() {
         isTheUserOfTheProduct.clear();

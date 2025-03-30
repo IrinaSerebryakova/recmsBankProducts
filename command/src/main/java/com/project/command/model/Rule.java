@@ -29,7 +29,7 @@ public class Rule {
 
     @OneToMany(mappedBy = "rule", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
-    private List<Query> rule;
+    private List<Query> queries;
 
     @JsonCreator
     public Rule(@JsonProperty String productName,
@@ -80,12 +80,12 @@ public class Rule {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Rule rule1 = (Rule) o;
-        return Objects.equals(id, rule1.id) && Objects.equals(productId, rule1.productId) && Objects.equals(productName, rule1.productName) && Objects.equals(productText, rule1.productText) && Objects.equals(rule, rule1.rule);
+        return Objects.equals(id, rule1.id) && Objects.equals(productId, rule1.productId) && Objects.equals(productName, rule1.productName) && Objects.equals(productText, rule1.productText) && Objects.equals(queries, rule1.queries);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productId, productName, productText, rule);
+        return Objects.hash(id, productId, productName, productText, queries);
     }
 
     @Override
@@ -96,5 +96,13 @@ public class Rule {
                 ", productName='" + productName + '\'' +
                 ", productText='" + productText + '\'' +
                 '}';
+    }
+
+    public List<Query> getQueries() {
+        return queries;
+    }
+
+    public void setQueries(List<Query> queries) {
+        this.queries = queries;
     }
 }

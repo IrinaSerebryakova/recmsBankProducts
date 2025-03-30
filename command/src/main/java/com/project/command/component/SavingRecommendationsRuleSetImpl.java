@@ -1,9 +1,6 @@
 package com.project.command.component;
 
 import com.project.command.component.interfaces.RecommendationsRuleSet;
-import com.project.command.dynamic.constants.Operator;
-import com.project.command.dynamic.constants.ProductType;
-import com.project.command.dynamic.constants.TransactionType;
 import com.project.command.model.Rule;
 import com.project.command.repository.RecommendationsRepository;
 import org.slf4j.Logger;
@@ -15,6 +12,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.project.command.dynamic.RecommendationsConstants.SAVING_RECOMMENDATIONS;
+import static com.project.command.dynamic.constants.Operator.GREATER_THAN;
+import static com.project.command.dynamic.constants.ProductType.DEBIT;
+import static com.project.command.dynamic.constants.ProductType.SAVING;
+import static com.project.command.dynamic.constants.TransactionType.DEPOSIT;
 
 @Component
 public class SavingRecommendationsRuleSetImpl implements RecommendationsRuleSet {
@@ -35,10 +36,10 @@ public class SavingRecommendationsRuleSetImpl implements RecommendationsRuleSet 
      * Сумма пополнений по всем продуктам типа DEBIT больше, чем сумма трат по всем продуктам типа DEBIT.
      */
     public Optional<Rule> evaluateRules(UUID userId) {
-        boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, ProductType.DEBIT) &&
-                (recommendationsRepository.comparingTransactionAmounts(userId, String.valueOf(TransactionType.DEPOSIT), String.valueOf(ProductType.DEBIT), String.valueOf(Operator.GREATER_THAN), "50000") ||
-                        recommendationsRepository.comparingTransactionAmounts(userId, String.valueOf(TransactionType.DEPOSIT), String.valueOf(ProductType.SAVING), String.valueOf(Operator.GREATER_THAN), "50000")) &&
-                recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, ProductType.DEBIT, String.valueOf(Operator.GREATER_THAN));
+        boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, DEBIT.name()) &&
+        (recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), DEBIT.name(), GREATER_THAN.name(), "50000") ||
+                        recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), SAVING.name(), GREATER_THAN.name(), "50000")) &&
+                recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name());
 
         return Optional.ofNullable(evaluate ? SAVING_RECOMMENDATIONS : null);
     }

@@ -1,7 +1,6 @@
 package com.project.command.dynamic;
 
 import com.project.command.dynamic.abstracts.AbstractQuery;
-import com.project.command.dynamic.constants.ProductType;
 import com.project.command.repository.RecommendationsRepository;
 import org.springframework.stereotype.Component;
 
@@ -31,11 +30,6 @@ public class ActiveUserOf extends AbstractQuery {
 
     @Override
     protected boolean evaluateRequest(UUID userId, RecommendationsRepository recommendationsRepository) {
-        return recommendationsRepository.isTheActiveUserOfTheProduct(userId, ProductType.valueOf(productType));
+        return recommendationsRepository.isTheActiveUserOfTheProduct(userId, productType);
     }
 }
-
-   /* protected ActiveUserOf(List<String> args, boolean negate) {
-        super(negate);
-        this.productType = args.get(0);
-    }*/

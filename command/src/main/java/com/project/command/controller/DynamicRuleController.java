@@ -1,6 +1,6 @@
 package com.project.command.controller;
 
-import com.project.command.model.Query;
+import com.project.command.model.Rule;
 import com.project.command.model.Statistics;
 import com.project.command.service.DynamicRuleService;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +17,8 @@ public class DynamicRuleController {
     }
 
     @PostMapping
-    public void createNewDynamicRule(@RequestBody Query query){
-       dynamicRuleService.saveQuery(query);
+    public void createNewDynamicRule(@RequestBody Rule rule) {
+       dynamicRuleService.saveRule(rule);
     }
 
    @DeleteMapping("/{dynamicRuleId}")
@@ -27,8 +27,8 @@ public class DynamicRuleController {
     }
 
     @GetMapping
-    public List<Query> getAllQueries(){
-        return dynamicRuleService.getAllQueries();
+    public List<Rule> getAllRules(){
+        return dynamicRuleService.getAllRules();
     }
 
     @GetMapping("/stats")
