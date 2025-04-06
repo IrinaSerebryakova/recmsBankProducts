@@ -35,10 +35,11 @@ public class SavingRecommendationsRuleSetImpl implements RecommendationsRuleSet 
      * Пользователь использует как минимум один продукт с типом DEBIT.
      * Сумма пополнений по всем продуктам типа DEBIT больше или равна 50 000 ₽ ИЛИ Сумма пополнений по всем продуктам типа SAVING больше или равна 50 000 ₽.
      * Сумма пополнений по всем продуктам типа DEBIT больше, чем сумма трат по всем продуктам типа DEBIT.
+     * @param userId
      */
     public Optional<Rule> evaluateRules(UUID userId) {
         boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, DEBIT.name()) &&
-        (recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), DEBIT.name(), GREATER_THAN_OR_EQUAL.name(), "50000") ||
+                (recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), DEBIT.name(), GREATER_THAN_OR_EQUAL.name(), "50000") ||
                         recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), SAVING.name(), GREATER_THAN_OR_EQUAL.name(), "50000")) &&
                 recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name());
 

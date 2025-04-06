@@ -34,12 +34,13 @@ public class CreditRecommendationsRuleSetImpl implements RecommendationsRuleSet 
      * Пользователь не использует продукты с типом CREDIT.
      * Сумма пополнений по всем продуктам типа DEBIT больше, чем сумма трат по всем продуктам типа DEBIT.
      * Сумма трат по всем продуктам типа DEBIT больше, чем 100 000 ₽.
+     * @param userId
      */
     public Optional<Rule> evaluateRules(UUID userId) {
-        boolean  evaluate =
+        boolean evaluate =
                 !recommendationsRepository.isTheUserOfTheProduct(userId, CREDIT) &&
-                (recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name())) &&
-                recommendationsRepository.comparingTransactionAmounts(userId, WITHDRAW.name(), DEBIT.name(), GREATER_THAN.name(), "100000");
+                        (recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name())) &&
+                        recommendationsRepository.comparingTransactionAmounts(userId, WITHDRAW.name(), DEBIT.name(), GREATER_THAN.name(), "100000");
         return Optional.ofNullable(evaluate ? CREDIT_RECOMMENDATIONS : null);
     }
 }

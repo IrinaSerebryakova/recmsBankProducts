@@ -1,6 +1,5 @@
 package com.project.command.repository;
 
-import com.project.command.dynamic.constants.ProductType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -115,7 +113,7 @@ public class RecommendationsRepository {
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT " +
-                            "COALESCE(SUM(amount::NUMERIC), 0) " + operationType + " ? AS result " +
+                            "COALESCE(SUM(amount::NUMERIC), 0) > ? AS result " +
                             "FROM transactions t " +
                             "JOIN products p ON t.product_id = p.id " +
                             "WHERE t.user_id = ? AND t.type = ? AND p.type = ?;",

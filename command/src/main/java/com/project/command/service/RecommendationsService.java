@@ -4,7 +4,6 @@ package com.project.command.service;
 import com.project.command.component.interfaces.RecommendationsRuleSet;
 import com.project.command.model.Rule;
 import com.project.command.repository.RecommendationsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,11 +13,11 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class RecommendationsService{
+public class RecommendationsService {
 
     private final List<RecommendationsRuleSet> rules;
     private final RecommendationsRepository recommendationsRepository;
-private final DynamicRuleService dynamicRuleService;
+    private final DynamicRuleService dynamicRuleService;
 
     public RecommendationsService(List<RecommendationsRuleSet> rules, RecommendationsRepository recommendationsRepository, DynamicRuleService dynamicRuleService) {
         this.rules = rules;
@@ -26,7 +25,11 @@ private final DynamicRuleService dynamicRuleService;
         this.dynamicRuleService = dynamicRuleService;
     }
 
-    //здесь только статика надо добавить динамику
+    /**
+     * Получение рекомендаций по статическим и динамическим правилам
+     * @param userId
+     * @return список статических правил
+     */
     public List<Rule> getRecommendations(UUID userId) {
         List<Rule> rules1 = dynamicRuleService.getListOfRulesForUser(userId);
         List<Rule> rules2 = rules.stream()
