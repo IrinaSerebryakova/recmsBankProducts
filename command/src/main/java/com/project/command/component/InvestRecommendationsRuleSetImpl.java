@@ -29,6 +29,7 @@ public class InvestRecommendationsRuleSetImpl implements RecommendationsRuleSet 
      * Пользователь использует как минимум один продукт с типом DEBIT.
      * Пользователь не использует продукты с типом INVEST.
      * Сумма пополнений продуктов с типом SAVING больше 1000 ₽
+     * @param userId
      */
     public Optional<Rule> evaluateRules(UUID userId) {
         boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, DEBIT.name()) &&

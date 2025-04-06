@@ -1,23 +1,30 @@
 package com.project.command.dynamic;
 
 import com.project.command.dynamic.abstracts.AbstractQuery;
-import com.project.command.dynamic.constants.ProductType;
+import com.project.command.dynamic.constants.QueryType;
+import com.project.command.model.Query;
 import com.project.command.repository.RecommendationsRepository;
 import org.springframework.stereotype.Component;
 
-
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import static com.project.command.dynamic.constants.QueryType.USER_OF;
 
 @Component
 public class UserOf extends AbstractQuery {
-
+    private String queryType = USER_OF.name();
     private String productType;
     private boolean negate;
+    RecommendationsRepository recommendationsRepository;
 
+    /**
+     * Конструктор со значениями по умолчанию
+     */
     public UserOf() {
-        super(false); // Значение по умолчанию для negate
-        this.productType = null; // Инициализация по умолчанию
+        super(false);
+        this.productType = null;
     }
 
     public void setArgs(List<String> args) {
@@ -35,15 +42,13 @@ public class UserOf extends AbstractQuery {
     protected boolean evaluateRequest(UUID userId, RecommendationsRepository recommendationsRepository) {
         return recommendationsRepository.isTheUserOfTheProduct(userId, productType);
     }
+
+    @Override
+    public String getQueryType() {
+        return queryType;
+    }
+
+    public boolean handle(UUID id, Query query, Map<QueryType, AbstractQuery> queries) {
+        return query.isNegate() != recommendationsRepository.isTheUserOfTheProduct(id, query.getArguments().get(0));
+    }
 }
-
-
-/*
-
-private final String productType;
-
-protected UserOf(List<String> args, boolean negate) {
-    super(negate);
-    this.productType = args.get(0);
-}
-*/

@@ -18,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.project.command.telegrambot.command.CommandSupportUtils.userName;
-
 @Service
 @Transactional
 public class TelegramBotUpdatesListener implements UpdatesListener {

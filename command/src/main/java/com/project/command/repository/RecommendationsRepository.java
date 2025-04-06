@@ -1,6 +1,5 @@
 package com.project.command.repository;
 
-import com.project.command.dynamic.constants.ProductType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -112,19 +110,18 @@ public class RecommendationsRepository {
         if (comparingTransactionAmounts.containsKey(key)) {
             return comparingTransactionAmounts.get(key);
         }
-
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT " +
-                            "COALESCE(SUM(amount::NUMERIC), 0) >= ? AS result " +
+                            "COALESCE(SUM(amount::NUMERIC), 0) > ? AS result " +
                             "FROM transactions t " +
                             "JOIN products p ON t.product_id = p.id " +
-                            "WHERE t.user_id = ? AND t.type = ? AND p.type = ?",
+                            "WHERE t.user_id = ? AND t.type = ? AND p.type = ?;",
                     Boolean.class,
-                    amountForComparing, userId, transactionType, productType);
+                    amountForComparing, userId, transactionType, productType
+            );
             logger.info("Result of method checking rule \"comparingTransactionAmounts\" is {}", result);
             comparingTransactionAmounts.put(key, result);
-
             return result != null && result;
         } catch (Exception e) {
             logger.error("Error in \"comparingTransactionAmounts\" for userId: {}, message: {}",
@@ -150,11 +147,11 @@ public class RecommendationsRepository {
         try {
             Boolean result = jdbcTemplate.queryForObject(
                     "SELECT " +
-                            "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = ?) >= " +
-                            "SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = ?) AS result " +
+                            "COALESCE(SUM(amount::NUMERIC) FILTER (WHERE t.type = 'DEPOSIT' AND p.type = ?), 0) >= " +
+                            "COALESCE(SUM(amount::NUMERIC) FILTER (WHERE t.type = 'WITHDRAW' AND p.type = ?), 0) AS result " +
                             "FROM transactions t " +
                             "JOIN products p ON t.product_id = p.id " +
-                            "WHERE t.user_id = ?",
+                            "WHERE t.user_id = ?;",
                     Boolean.class,
                     productType, productType, userId
             );

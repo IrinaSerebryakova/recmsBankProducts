@@ -17,7 +17,7 @@ public class StartCommand implements TelegramCommand{
     private UserDtoRepository userDtoRepository;
 
     @Override
-    public boolean support(Update update) {    // проверяем то, что нам прислал телеграм-бот: update.message().text()
+    public boolean support(Update update) {
         return CommandSupportUtils.isStringEqualsCommand(update, START);
     }
 
