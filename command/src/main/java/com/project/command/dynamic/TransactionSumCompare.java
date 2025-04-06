@@ -22,17 +22,6 @@ public class TransactionSumCompare extends AbstractQuery {
         this.operator = null;
         this.amountForComparing = null;
     }
-/*
-    public TransactionSumCompare(List<String> args, boolean negate) {
-        super(negate);
-        if (args == null || args.isEmpty()) {
-            throw new IllegalArgumentException("Argument list cannot be null or empty");
-        }
-        this.transactionType = args.get(0);
-        this.productType = args.get(1);
-        this.operator = args.get(2);
-        this.amountForComparing = args.get(3);
-    }*/
 
     public void setArgs(List<String> args) {
         if (args == null || args.isEmpty()) {

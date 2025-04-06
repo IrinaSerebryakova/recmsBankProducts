@@ -19,12 +19,6 @@ public class TransactionSumCompareDepositWithdrow extends AbstractQuery {
         this.operator = null;
     }
 
- /*   public TransactionSumCompareDepositWithdrow(List<String> args, boolean negate) {
-        super(negate);
-        this.productType = args.get(0);
-        this.operator = args.get(1);
-    }*/
-
     public void setArgs(List<String> args) {
         if (args == null || args.isEmpty()) {
             throw new IllegalArgumentException("Argument list cannot be null or empty");

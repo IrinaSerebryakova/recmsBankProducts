@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import static com.project.command.dynamic.RecommendationsConstants.SAVING_RECOMMENDATIONS;
 import static com.project.command.dynamic.constants.Operator.GREATER_THAN;
+import static com.project.command.dynamic.constants.Operator.GREATER_THAN_OR_EQUAL;
 import static com.project.command.dynamic.constants.ProductType.DEBIT;
 import static com.project.command.dynamic.constants.ProductType.SAVING;
 import static com.project.command.dynamic.constants.TransactionType.DEPOSIT;
@@ -37,8 +38,8 @@ public class SavingRecommendationsRuleSetImpl implements RecommendationsRuleSet 
      */
     public Optional<Rule> evaluateRules(UUID userId) {
         boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, DEBIT.name()) &&
-        (recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), DEBIT.name(), GREATER_THAN.name(), "50000") ||
-                        recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), SAVING.name(), GREATER_THAN.name(), "50000")) &&
+        (recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), DEBIT.name(), GREATER_THAN_OR_EQUAL.name(), "50000") ||
+                        recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), SAVING.name(), GREATER_THAN_OR_EQUAL.name(), "50000")) &&
                 recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name());
 
         return Optional.ofNullable(evaluate ? SAVING_RECOMMENDATIONS : null);
