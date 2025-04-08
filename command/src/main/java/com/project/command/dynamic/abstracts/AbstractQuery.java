@@ -8,19 +8,14 @@ import java.util.Map;
 import java.util.UUID;
 
 public abstract class AbstractQuery {
-    private final boolean negate;
+    private RecommendationsRepository recommendationsRepository;
+    private boolean negate = false;
 
-    protected AbstractQuery(boolean negate) {
+    public AbstractQuery(boolean negate) {
         this.negate = negate;
     }
 
-    public boolean evaluate(UUID userId, RecommendationsRepository recommendationsRepository) {
-        return negate != evaluateRequest(userId, recommendationsRepository);
-    }
-
-    protected abstract boolean evaluateRequest(UUID userId, RecommendationsRepository recommendationsRepository);
-
-    protected abstract String getQueryType();
+    public abstract QueryType getQueryType();
 
     public abstract boolean handle(UUID id, Query query, Map<QueryType, AbstractQuery> queries);
 }

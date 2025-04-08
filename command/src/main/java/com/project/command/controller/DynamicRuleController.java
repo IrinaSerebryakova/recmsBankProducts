@@ -3,6 +3,7 @@ package com.project.command.controller;
 import com.project.command.model.Rule;
 import com.project.command.model.Statistics;
 import com.project.command.service.DynamicRuleService;
+import com.project.command.service.StatisticsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,9 +12,11 @@ import java.util.List;
 @RequestMapping("/rule")
 public class DynamicRuleController {
     private final DynamicRuleService dynamicRuleService;
+    private final StatisticsService statisticsService;
 
-    public DynamicRuleController(DynamicRuleService dynamicRuleServiceImpl) {
+    public DynamicRuleController(DynamicRuleService dynamicRuleServiceImpl, StatisticsService statisticsService) {
         this.dynamicRuleService = dynamicRuleServiceImpl;
+        this.statisticsService = statisticsService;
     }
 
     @PostMapping
@@ -33,6 +36,6 @@ public class DynamicRuleController {
 
     @GetMapping("/stats")
     public List<Statistics> getStatisticsOfDynamicRules(){
-        return dynamicRuleService.getStatisticsOfDynamicRules();
+        return statisticsService.getStatisticsOfDynamicRules();
     }
 }

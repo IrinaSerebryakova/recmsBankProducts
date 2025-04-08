@@ -8,37 +8,46 @@ import com.project.command.dynamic.abstracts.AbstractQuery;
 import com.project.command.dynamic.constants.QueryType;
 import com.project.command.model.Query;
 import com.project.command.model.Rule;
-import com.project.command.model.Statistics;
 import com.project.command.repository.RecommendationsRepository;
 import com.project.command.repository.RuleRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-
-import static com.project.command.dynamic.constants.QueryType.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class DynamicRuleService {
 
-    private final RuleRepository ruleRepository;
-    private final ActiveUserOf activeUserOf;
-    private final TransactionSumCompare transactionSumCompare;
-    private final TransactionSumCompareDepositWithdrow transactionSumCompareDepositWithdrow;
-    private final UserOf userOf;
-    private final RecommendationsRepository recommendationsRepository;
+    private Map<QueryType, AbstractQuery> queriesMap;
+    private RuleRepository ruleRepository;
+    private ActiveUserOf activeUserOf;
+    private TransactionSumCompare transactionSumCompare;
+    private TransactionSumCompareDepositWithdrow transactionSumCompareDepositWithdrow;
+    private UserOf userOf;
+    private RecommendationsRepository recommendationsRepository;
+    private final List<AbstractQuery> queries;
 
     public DynamicRuleService(RuleRepository ruleRepository,
                               UserOf userOf,
                               ActiveUserOf activeUserOf,
                               TransactionSumCompare transactionSumCompare,
                               TransactionSumCompareDepositWithdrow transactionSumCompareDepositWithdrow,
-                              RecommendationsRepository recommendationsRepository) {
+                              RecommendationsRepository recommendationsRepository,
+                              List<AbstractQuery> queries) {
         this.ruleRepository = ruleRepository;
         this.activeUserOf = activeUserOf;
         this.transactionSumCompare = transactionSumCompare;
         this.transactionSumCompareDepositWithdrow = transactionSumCompareDepositWithdrow;
         this.userOf = userOf;
         this.recommendationsRepository = recommendationsRepository;
+        this.queries = queries;
+        this.queriesMap = queries.stream()
+                .collect(Collectors.toMap(
+                        AbstractQuery::getQueryType,
+                        query -> query));
     }
 
     public Rule saveRule(Rule rule) {
@@ -49,14 +58,15 @@ public class DynamicRuleService {
     }
 
     public List<Rule> getAllRules() {
-        return ruleRepository.findAll();
+        List<Rule> copyOfListOfRules = new ArrayList<>(ruleRepository.findAll());
+        return copyOfListOfRules;
     }
 
     public List<Rule> getListOfRulesForUser(UUID userId) {
-        List<Rule> rules3 = ruleRepository.findAll();
+        List<Rule> rulesAll = ruleRepository.findAll();
         List<Rule> result = new ArrayList<>();
 
-        for (Rule rule : rules3) {
+        for (Rule rule : rulesAll) {
             List<Query> queries = rule.getQueries();
             if (checkAllQueries(userId, queries)) {
                 result.add(rule);
@@ -82,20 +92,11 @@ public class DynamicRuleService {
      * @return
      */
     public boolean checkQuery(UUID id, Query query) {
-        Map<QueryType, AbstractQuery> queries = new HashMap<>();
-        queries.put(USER_OF, userOf);
-        queries.put(ACTIVE_USER_OF, activeUserOf);
-        queries.put(TRANSACTION_SUM_COMPARE, transactionSumCompare);
-        queries.put(TRANSACTION_SUM_COMPARE_DEPOSIT_WITHDRAW, transactionSumCompareDepositWithdrow);
-        AbstractQuery abstractQuery = queries.get(query.getQuery());
-        return abstractQuery.handle(id, query, queries);
+        AbstractQuery abstractQuery = queriesMap.get(query.getQuery());
+        return abstractQuery.handle(id, query, queriesMap);
     }
 
     public void deleteDynamicRuleOfRecommendations(Long dynamicRuleId) {
         ruleRepository.deleteById(dynamicRuleId);
-    }
-
-    public List<Statistics> getStatisticsOfDynamicRules() {
-        return new ArrayList<Statistics>();
     }
 }

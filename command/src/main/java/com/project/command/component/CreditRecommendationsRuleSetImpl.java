@@ -21,10 +21,9 @@ public class CreditRecommendationsRuleSetImpl implements RecommendationsRuleSet 
     private final static String CREDIT = "Простой кредит";
     private final static Logger logger = LoggerFactory.getLogger(CreditRecommendationsRuleSetImpl.class);
 
-    @Autowired
+
     private final RecommendationsRepository recommendationsRepository;
 
-    @Autowired
     public CreditRecommendationsRuleSetImpl(RecommendationsRepository recommendationsRepository) {
         this.recommendationsRepository = recommendationsRepository;
     }
@@ -41,6 +40,13 @@ public class CreditRecommendationsRuleSetImpl implements RecommendationsRuleSet 
                 !recommendationsRepository.isTheUserOfTheProduct(userId, CREDIT) &&
                         (recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name())) &&
                         recommendationsRepository.comparingTransactionAmounts(userId, WITHDRAW.name(), DEBIT.name(), GREATER_THAN.name(), "100000");
+
+        if (evaluate) {
+            logger.info("User {} was evaluated for the credit recommendation.", userId);
+        } else {
+            logger.debug("User {} wasn't evaluated for the credit recommendation.", userId);
+        }
+
         return Optional.ofNullable(evaluate ? CREDIT_RECOMMENDATIONS : null);
     }
 }

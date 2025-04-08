@@ -35,6 +35,12 @@ public class InvestRecommendationsRuleSetImpl implements RecommendationsRuleSet 
         boolean evaluate = recommendationsRepository.isTheUserOfTheProduct(userId, DEBIT.name()) &&
                 !recommendationsRepository.isTheUserOfTheProduct(userId, INVEST.name()) &&
                 recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), SAVING.name(), GREATER_THAN.name(), "1000");
+        if (evaluate) {
+            logger.info("User {} was evaluated for the credit recommendation.", userId);
+        } else {
+            logger.debug("User {} wasn't evaluated for the credit recommendation.", userId);
+        }
+
         return Optional.ofNullable(evaluate ? INVEST_RECOMMENDATIONS : null);
     }
 }

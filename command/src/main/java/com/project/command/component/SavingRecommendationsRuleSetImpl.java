@@ -22,10 +22,8 @@ import static com.project.command.dynamic.constants.TransactionType.DEPOSIT;
 public class SavingRecommendationsRuleSetImpl implements RecommendationsRuleSet {
     private final static Logger logger = LoggerFactory.getLogger(SavingRecommendationsRuleSetImpl.class);
 
-    @Autowired
     private final RecommendationsRepository recommendationsRepository;
 
-    @Autowired
     public SavingRecommendationsRuleSetImpl(RecommendationsRepository recommendationsRepository) {
         this.recommendationsRepository = recommendationsRepository;
     }
@@ -42,6 +40,12 @@ public class SavingRecommendationsRuleSetImpl implements RecommendationsRuleSet 
                 (recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), DEBIT.name(), GREATER_THAN_OR_EQUAL.name(), "50000") ||
                         recommendationsRepository.comparingTransactionAmounts(userId, DEPOSIT.name(), SAVING.name(), GREATER_THAN_OR_EQUAL.name(), "50000")) &&
                 recommendationsRepository.comparingTheAmountOfDepositsWithWithdrawsOfOneProductType(userId, DEBIT.name(), GREATER_THAN.name());
+
+        if (evaluate) {
+            logger.info("User {} was evaluated for the credit recommendation.", userId);
+        } else {
+            logger.debug("User {} wasn't evaluated for the credit recommendation.", userId);
+        }
 
         return Optional.ofNullable(evaluate ? SAVING_RECOMMENDATIONS : null);
     }

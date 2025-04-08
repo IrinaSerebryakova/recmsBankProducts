@@ -6,49 +6,33 @@ import com.project.command.model.Query;
 import com.project.command.repository.RecommendationsRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.project.command.dynamic.constants.QueryType.ACTIVE_USER_OF;
-
-@Component
+@Component("activeUserOf")
 public class ActiveUserOf extends AbstractQuery {
-    private String queryType = ACTIVE_USER_OF.name();
-    private String productType;
-    private boolean negate;
-    RecommendationsRepository recommendationsRepository;
+    private RecommendationsRepository recommendationsRepository;
 
-    /**
-    * Конструктор со значениями по умолчанию
-    */
     public ActiveUserOf() {
         super(false);
-        this.productType = null;
-    }
-
-    public void setArgs(List<String> args) {
-        if (args == null || args.isEmpty()) {
-            throw new IllegalArgumentException("Argument list cannot be null or empty");
-        }
-        this.productType = args.get(0);
-    }
-
-    public void setNegate(boolean negate) {
-        this.negate = negate;
+        this.recommendationsRepository = recommendationsRepository;
     }
 
     @Override
-    protected boolean evaluateRequest(UUID userId, RecommendationsRepository recommendationsRepository) {
-        return recommendationsRepository.isTheActiveUserOfTheProduct(userId, productType);
-    }
-
-    @Override
-    public String getQueryType() {
-        return queryType;
+    public QueryType getQueryType() {
+        return QueryType.ACTIVE_USER_OF;
     }
 
     public boolean handle(UUID id, Query query, Map<QueryType, AbstractQuery> queries) {
-        return query.isNegate() != recommendationsRepository.isTheActiveUserOfTheProduct(id, query.getArguments().get(0));
+        if (query == null || query.getArguments() == null || query.getArguments().isEmpty()) {
+            throw new IllegalArgumentException("Invalid query arguments");
+        }
+        String productType = query.getArguments().get(0);
+
+        boolean result = recommendationsRepository.isTheActiveUserOfTheProduct(
+                id,
+                productType
+        );
+        return query.isNegate() != result;
     }
 }

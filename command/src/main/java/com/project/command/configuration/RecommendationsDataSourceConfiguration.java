@@ -43,11 +43,6 @@ public class RecommendationsDataSourceConfiguration {
     }
 
     @Bean
-    public boolean negate() {
-        return false;
-    }
-
-    @Bean
     public Caffeine caffeineConfig() {
         return Caffeine.newBuilder().expireAfterWrite(60, TimeUnit.MINUTES);
     }

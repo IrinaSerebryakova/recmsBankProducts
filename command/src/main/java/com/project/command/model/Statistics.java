@@ -21,7 +21,6 @@ public class Statistics {
     @JsonBackReference
     private Query query;
 
-
     @JsonCreator
     public Statistics(@JsonProperty Query query, @JsonProperty int count) {
         this.query = query;
@@ -54,5 +53,14 @@ public class Statistics {
 
     public void setDynamicRule(Query query) {
         this.query = query;
+    }
+
+    @Override
+    public String toString() {
+        return "Statistics{" +
+                "ruleId=" + ruleId +
+                ", query=" + query +
+                ", count=" + count +
+                '}';
     }
 }
