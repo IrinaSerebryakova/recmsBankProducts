@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class RecommendationsService {
@@ -31,15 +32,10 @@ public class RecommendationsService {
      * @return список статических правил
      */
     public List<Rule> getRecommendations(UUID userId) {
-        List<Rule> rules1 = dynamicRuleService.getListOfRulesForUser(userId);
-        List<Rule> rules2 = rules.stream()
+        return rules.stream()
                 .map(rule -> rule.evaluateRules(userId))
-                .filter(Optional::isPresent)
-                .map(it -> it.get())
+                .flatMap(Optional::stream)
                 .collect(Collectors.toList());
-        List<Rule> common = new ArrayList<>(rules1);
-        common.addAll(rules2);
-        return common;
     }
 
     public void clearCashes() {

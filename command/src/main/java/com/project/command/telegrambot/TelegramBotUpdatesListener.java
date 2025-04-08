@@ -22,23 +22,17 @@ import java.util.List;
 @Transactional
 public class TelegramBotUpdatesListener implements UpdatesListener {
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
-
-    @Autowired
-    private TelegramBot telegramBot;
-
-    @Autowired
-    private List<TelegramCommand> commands;
-
     private Rule rule;
     private SendResponse sendResponse;
     private RecommendationsRepository recommendationsRepository;
+    private TelegramBot telegramBot;
+    private List<TelegramCommand> commands;
 
     @Autowired
-    public TelegramBotUpdatesListener(RecommendationsRepository recommendationsRepository) {
+    public TelegramBotUpdatesListener(RecommendationsRepository recommendationsRepository, TelegramBot telegramBot, List<TelegramCommand> commands) {
         this.recommendationsRepository = recommendationsRepository;
-    }
-
-    public TelegramBotUpdatesListener() {
+        this.telegramBot = telegramBot;
+        this.commands = commands;
     }
 
     @PostConstruct

@@ -105,4 +105,5 @@ public class Rule {
     public void setQueries(List<Query> queries) {
         this.queries = queries;
     }
+
 }
